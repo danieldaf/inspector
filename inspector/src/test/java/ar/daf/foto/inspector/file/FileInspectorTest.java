@@ -8,6 +8,7 @@ import java.io.OutputStreamWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 import org.joda.time.DateTime;
 import org.testng.Assert;
@@ -111,6 +112,7 @@ public class FileInspectorTest {
 			Album albumBase = inspector.armarAlbum(pathBase.toString());
 			Assert.assertNotNull(albumBase);
 			Assert.assertNotNull(albumBase.getInfo());
+			Assert.assertEquals(albumBase.getImagenes().size(), 3);
 			
 			//String strJsonOriginal = JsonConverter.buildJson(albumBase).toJSONString();
 			//Estos parmetros son dinamicos asi que los ponemos en valores conocidos para comparar
@@ -143,6 +145,12 @@ public class FileInspectorTest {
 		bw.write("{\"tags\":null,\"imagenes\":[{\"fileNameSmall\":null,\"tags\":null,\"titulo\":\"Gato\",\"fileName\":\"Fotogato.pNG\",\"descripcion\":\"un lindo gatito\"},{\"fileNameSmall\":null,\"tags\":null,\"titulo\":\"Perro\",\"fileName\":\"FotoPerro.PNG\",\"descripcion\":null},{\"fileNameSmall\":null,\"tags\":null,\"titulo\":\"Yo\",\"fileName\":\"fotoYo.png\",\"descripcion\":\"Un foto de perfil\"}],\"titulo\":\"armarAlbumFotoInspectorTest\",\"fecha\":\"2014-04-06T17:39:02.000Z\",\"descripcion\":\"Album simplecon fotos de prueba\",\"imagenPortada\":null,\"ubicacion\":null,\"info\":{\"versionRevision\":0,\"versionMenor\":1,\"fechaActualizacion\":null,\"versionMayor\":0,\"contentHash\":\"b33aa2440c6e479003cae01f25f14c8014036e67\"}}");
 		bw.close();
 		long albumFechaModificacion = fileAlbum.lastModified();
+		try {
+			// se introduce una pausa de un segundo por si el sistema de archivos no 
+			// almacena la fechade ultima modificacion con presicion de milisegundos
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+		}
 		
 		try {
 			Album albumBase = inspector.armarAlbum(pathBase.toString());
@@ -174,5 +182,155 @@ public class FileInspectorTest {
 				fileAlbum.delete();
 		}		
 		
+	}
+
+	@Test(dependsOnMethods={"armarAlbumConActualizacion"})
+	public void armarAlbumConActualizacionDeImagenes() throws IOException {
+		File fileAlbum = new File(pathBase.toString()+File.separator+inspector.getDbTextFileName());
+		if (fileAlbum.exists()) {
+			fileAlbum.delete();
+		}
+		fileAlbum.createNewFile();
+		FileOutputStream fos = new FileOutputStream(fileAlbum);
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos, inspector.getDbFileEncoding()));
+		bw.write("{\"tags\":null,\"imagenes\":[{\"fileNameSmall\":null,\"tags\":null,\"titulo\":\"Gato\",\"fileName\":\"Fotogato.pNG\",\"descripcion\":\"un lindo gatito\"},{\"fileNameSmall\":null,\"tags\":null,\"titulo\":\"Perro\",\"fileName\":\"FotoPerro.PNG\",\"descripcion\":null},{\"fileNameSmall\":null,\"tags\":null,\"titulo\":\"Yo\",\"fileName\":\"fotoYo.png\",\"descripcion\":\"Un foto de perfil\"}],\"titulo\":\"armarAlbumFotoInspectorTest\",\"fecha\":\"2014-04-06T17:39:02.000Z\",\"descripcion\":\"Album simplecon fotos de prueba\",\"imagenPortada\":null,\"ubicacion\":null,\"info\":{\"versionRevision\":0,\"versionMenor\":1,\"fechaActualizacion\":null,\"versionMayor\":0,\"contentHash\":\"b33aa2440c6e479003cae01f25f14c8014036e67\"}}");
+		bw.close();
+		long albumFechaModificacion = fileAlbum.lastModified();
+		try {
+			// se introduce una pausa de un segundo por si el sistema de archivos no 
+			// almacena la fechade ultima modificacion con presicion de milisegundos
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+		}
+		
+		File fotoDumbo = new File(fotoPerro.getParent()+File.separator+"FotoDumbo.gif");
+		fotoPerro.renameTo(fotoDumbo);
+		
+		try {
+			Album albumBase = inspector.armarAlbum(pathBase.toString());
+			Assert.assertNotNull(albumBase);
+			Assert.assertNotNull(albumBase.getInfo());
+			Assert.assertEquals(albumBase.getImagenes().size(), 3);
+			
+			//String strJsonOriginal = JsonConverter.buildJson(albumBase).toJSONString();
+			//Estos parmetros son dinamicos asi que los ponemos en valores conocidos para comparar
+			albumBase.getInfo().setContentHash("b33aa2440c6e479003cae01f25f14c8014036e67");
+			albumBase.getInfo().setFechaActualizacion(null);
+			
+			String strJson = JsonConverter.buildJson(albumBase).toJSONString();
+			Assert.assertEquals(strJson, "{\"tags\":null,\"imagenes\":[{\"fileNameSmall\":null,\"tags\":null,\"titulo\":\"FotoDumbo.gif\",\"fileName\":\"FotoDumbo.gif\",\"descripcion\":null},{\"fileNameSmall\":null,\"tags\":null,\"titulo\":\"Gato\",\"fileName\":\"Fotogato.pNG\",\"descripcion\":\"un lindo gatito\"},{\"fileNameSmall\":null,\"tags\":null,\"titulo\":\"Yo\",\"fileName\":\"fotoYo.png\",\"descripcion\":\"Un foto de perfil\"}],\"titulo\":\"armarAlbumFotoInspectorTest\",\"fecha\":\"2014-04-06T17:39:02.000Z\",\"descripcion\":\"Album simplecon fotos de prueba\",\"imagenPortada\":null,\"ubicacion\":null,\"info\":{\"versionRevision\":0,\"versionMenor\":1,\"fechaActualizacion\":null,\"versionMayor\":0,\"contentHash\":\"b33aa2440c6e479003cae01f25f14c8014036e67\"}}");
+			
+			Assert.assertTrue(fileAlbum.exists());
+			Assert.assertTrue(fileAlbum.isFile());
+			Assert.assertTrue(fileAlbum.canRead());
+			DateTime newTimeStamp = new DateTime(fileAlbum.lastModified());
+			Assert.assertTrue(newTimeStamp.isAfter(albumFechaModificacion));
+		} finally {
+			if (fileAlbum.exists())
+				fileAlbum.delete();
+			if (fotoDumbo.exists()) {
+				fotoDumbo.renameTo(fotoPerro);
+			}
+		}		
+	}
+	
+	@Test
+	public void inspeccionar() {
+		File fileAlbum = new File(pathBase.toString()+File.separator+inspector.getDbTextFileName());
+		File fileAlbumNavidad = new File(pathNavidad.toString()+File.separator+inspector.getDbTextFileName());
+		File fileAlbumVacaciones1998 = new File(pathVacaciones1998.toString()+File.separator+inspector.getDbTextFileName());
+		File fileAlbumVacaciones2010 = new File(pathVacaciones2010.toString()+File.separator+inspector.getDbTextFileName());
+		if (fileAlbum.exists())
+			fileAlbum.delete();
+		if (fileAlbumNavidad.exists())
+			fileAlbumNavidad.delete();
+		if (fileAlbumVacaciones1998.exists())
+			fileAlbumVacaciones1998.delete();
+		if (fileAlbumVacaciones2010.exists())
+			fileAlbumVacaciones2010.delete();
+		try {
+			List<Album> albumes = inspector.inspeccionar();
+			Assert.assertNotNull(albumes);
+			Assert.assertEquals(albumes.size(), 4);
+			
+			boolean albumBaseVerificado = false;
+			boolean albumNavidadVerificado = false;
+			boolean albumVacaciones1998Verificado = false;
+			boolean albumVacaciones2010Verificado = false;
+			
+			for (Album album : albumes) {
+				Assert.assertNotNull(album);
+				Assert.assertNotNull(album.getInfo());
+				Assert.assertNotNull(album.getImagenes());
+				Assert.assertNotEquals(album.getImagenes().size(), 0);
+				if (!albumBaseVerificado && album.getFilename().equals(pathBase.getFileName().toString())) {
+					albumBaseVerificado = true;
+					Assert.assertEquals(album.getImagenes().size(), 3);
+					album.setTitulo("armarAlbumFotoInspectorTest");
+					album.setFecha(null);
+					album.getInfo().setContentHash("b33aa2440c6e479003cae01f25f14c8014036e67");
+					album.getInfo().setFechaActualizacion(null);
+					String strJson = JsonConverter.buildJson(album).toJSONString();
+					Assert.assertEquals(strJson, "{\"tags\":null,\"imagenes\":[{\"fileNameSmall\":null,\"tags\":null,\"titulo\":\"Fotogato.pNG\",\"fileName\":\"Fotogato.pNG\",\"descripcion\":null},{\"fileNameSmall\":null,\"tags\":null,\"titulo\":\"FotoPerro.PNG\",\"fileName\":\"FotoPerro.PNG\",\"descripcion\":null},{\"fileNameSmall\":null,\"tags\":null,\"titulo\":\"fotoYo.png\",\"fileName\":\"fotoYo.png\",\"descripcion\":null}],\"titulo\":\"armarAlbumFotoInspectorTest\",\"fecha\":null,\"descripcion\":null,\"imagenPortada\":null,\"ubicacion\":null,\"info\":{\"versionRevision\":0,\"versionMenor\":1,\"fechaActualizacion\":null,\"versionMayor\":0,\"contentHash\":\"b33aa2440c6e479003cae01f25f14c8014036e67\"}}");
+					
+				} else if (!albumNavidadVerificado && album.getFilename().equals(pathNavidad.getFileName().toString())) {
+					albumNavidadVerificado = true;
+					Assert.assertEquals(album.getImagenes().size(), 4);
+					album.setFecha(null);
+					album.getInfo().setContentHash("b33aa2440c6e479003cae01f25f14c8014036e67");
+					album.getInfo().setFechaActualizacion(null);
+					String strJson = JsonConverter.buildJson(album).toJSONString();
+					Assert.assertEquals(strJson, "{\"tags\":null,\"imagenes\":[{\"fileNameSmall\":null,\"tags\":null,\"titulo\":\"limpiando.png\",\"fileName\":\"limpiando.png\",\"descripcion\":null},{\"fileNameSmall\":null,\"tags\":null,\"titulo\":\"festejando.png\",\"fileName\":\"festejando.png\",\"descripcion\":null},{\"fileNameSmall\":null,\"tags\":null,\"titulo\":\"bridando.png\",\"fileName\":\"bridando.png\",\"descripcion\":null},{\"fileNameSmall\":null,\"tags\":null,\"titulo\":\"cenando.png\",\"fileName\":\"cenando.png\",\"descripcion\":null}],\"titulo\":\"Navidad\",\"fecha\":null,\"descripcion\":null,\"imagenPortada\":null,\"ubicacion\":null,\"info\":{\"versionRevision\":0,\"versionMenor\":1,\"fechaActualizacion\":null,\"versionMayor\":0,\"contentHash\":\"b33aa2440c6e479003cae01f25f14c8014036e67\"}}");
+					
+				} else if (!albumVacaciones1998Verificado && album.getFilename().equals(pathVacaciones1998.getFileName().toString())) {
+					albumVacaciones1998Verificado = true;
+					Assert.assertEquals(album.getImagenes().size(), 3);
+					album.setFecha(null);
+					album.getInfo().setContentHash("b33aa2440c6e479003cae01f25f14c8014036e67");
+					album.getInfo().setFechaActualizacion(null);
+					String strJson = JsonConverter.buildJson(album).toJSONString();
+					Assert.assertEquals(strJson, "{\"tags\":null,\"imagenes\":[{\"fileNameSmall\":null,\"tags\":null,\"titulo\":\"foto003.jpg\",\"fileName\":\"foto003.jpg\",\"descripcion\":null},{\"fileNameSmall\":null,\"tags\":null,\"titulo\":\"foto002.jpg\",\"fileName\":\"foto002.jpg\",\"descripcion\":null},{\"fileNameSmall\":null,\"tags\":null,\"titulo\":\"foto001.jpg\",\"fileName\":\"foto001.jpg\",\"descripcion\":null}],\"titulo\":\"1998\",\"fecha\":null,\"descripcion\":null,\"imagenPortada\":null,\"ubicacion\":null,\"info\":{\"versionRevision\":0,\"versionMenor\":1,\"fechaActualizacion\":null,\"versionMayor\":0,\"contentHash\":\"b33aa2440c6e479003cae01f25f14c8014036e67\"}}");
+					
+				} else if (!albumVacaciones2010Verificado && album.getFilename().equals(pathVacaciones2010.getFileName().toString())) {
+					albumVacaciones2010Verificado = true;
+					Assert.assertEquals(album.getImagenes().size(), 3);
+					album.setFecha(null);
+					album.getInfo().setContentHash("b33aa2440c6e479003cae01f25f14c8014036e67");
+					album.getInfo().setFechaActualizacion(null);
+					String strJson = JsonConverter.buildJson(album).toJSONString();
+					Assert.assertEquals(strJson, "{\"tags\":null,\"imagenes\":[{\"fileNameSmall\":null,\"tags\":null,\"titulo\":\"foto003.jPEG\",\"fileName\":\"foto003.jPEG\",\"descripcion\":null},{\"fileNameSmall\":null,\"tags\":null,\"titulo\":\"foto002.jpeg\",\"fileName\":\"foto002.jpeg\",\"descripcion\":null},{\"fileNameSmall\":null,\"tags\":null,\"titulo\":\"foto001.JPG\",\"fileName\":\"foto001.JPG\",\"descripcion\":null}],\"titulo\":\"2010\",\"fecha\":null,\"descripcion\":null,\"imagenPortada\":null,\"ubicacion\":null,\"info\":{\"versionRevision\":0,\"versionMenor\":1,\"fechaActualizacion\":null,\"versionMayor\":0,\"contentHash\":\"b33aa2440c6e479003cae01f25f14c8014036e67\"}}");
+					
+				} else {
+					Assert.assertNull(album, "Este album no conicide con ninguno de los esperados");
+				}
+			}
+			
+			Assert.assertTrue(albumBaseVerificado);
+			Assert.assertTrue(albumNavidadVerificado);
+			Assert.assertTrue(albumVacaciones1998Verificado);
+			Assert.assertTrue(albumVacaciones2010Verificado);
+			
+			Assert.assertTrue(fileAlbum.exists());
+			Assert.assertTrue(fileAlbum.isFile());
+			Assert.assertTrue(fileAlbum.canRead());
+			Assert.assertTrue(fileAlbumNavidad.exists());
+			Assert.assertTrue(fileAlbumNavidad.isFile());
+			Assert.assertTrue(fileAlbumNavidad.canRead());
+			Assert.assertTrue(fileAlbumVacaciones1998.exists());
+			Assert.assertTrue(fileAlbumVacaciones1998.isFile());
+			Assert.assertTrue(fileAlbumVacaciones1998.canRead());
+			Assert.assertTrue(fileAlbumVacaciones2010.exists());
+			Assert.assertTrue(fileAlbumVacaciones2010.isFile());
+			Assert.assertTrue(fileAlbumVacaciones2010.canRead());
+		} finally {
+			if (fileAlbum.exists())
+				fileAlbum.delete();
+			if (fileAlbumNavidad.exists())
+				fileAlbumNavidad.delete();
+			if (fileAlbumVacaciones1998.exists())
+				fileAlbumVacaciones1998.delete();
+			if (fileAlbumVacaciones2010.exists())
+				fileAlbumVacaciones2010.delete();
+		}		
 	}
 }
