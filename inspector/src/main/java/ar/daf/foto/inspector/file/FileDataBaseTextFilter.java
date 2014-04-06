@@ -12,10 +12,10 @@ public class FileDataBaseTextFilter implements FileFilter {
 	}
 	
 	public boolean accept(File pathname) {
-		boolean result = true;
+		boolean result = false;
 		result = pathname.exists() && pathname.isFile() && pathname.canRead();
 		if (result) {
-			String name = pathname.getName().toUpperCase();
+			String name = pathname.getName();
 			result = dbTextFile.equals(name);
 		}
 		return result;

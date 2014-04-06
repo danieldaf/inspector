@@ -119,15 +119,17 @@ public class JsonConverter {
 	
 	public static String buildJsonDate(Class<?> dateClass, Object fieldObject) {
 		String result = null;	
-		if (Date.class.isAssignableFrom(dateClass)) {
-			Date date = (Date)fieldObject;
-			DateTimeZone timeZone = DateTimeZone.getDefault();
-			result = jsonDatefmt.format(timeZone.convertLocalToUTC(date.getTime(), true));
-		} else if (DateTime.class.isAssignableFrom(dateClass)) {
-			DateTime date = (DateTime)fieldObject;
-			DateTimeZone timeZone = date.getZone();
-			result = jsonDatefmt.format(timeZone.convertLocalToUTC(date.getMillis(), true));
-		} 
+		if (fieldObject != null) {
+			if (Date.class.isAssignableFrom(dateClass)) {
+				Date date = (Date)fieldObject;
+				DateTimeZone timeZone = DateTimeZone.getDefault();
+				result = jsonDatefmt.format(timeZone.convertLocalToUTC(date.getTime(), true));
+			} else if (DateTime.class.isAssignableFrom(dateClass)) {
+				DateTime date = (DateTime)fieldObject;
+				DateTimeZone timeZone = date.getZone();
+				result = jsonDatefmt.format(timeZone.convertLocalToUTC(date.getMillis(), true));
+			} 
+		}
 		return result;
 	}
 	
@@ -239,7 +241,50 @@ public class JsonConverter {
 							jsonPropName = annotation.name().trim();
 						}
 						Object jsonPropValue = jsonObject.get(jsonPropName);
-						method.invoke(result, buildValueForField(field, jsonPropValue));
+						Object propValue = buildValueForField(field, jsonPropValue);
+						if (propValue != null && (propValue instanceof Long || propValue instanceof Double)) {
+							Object i = null;
+							if (field.getType().isPrimitive()) {
+								if ("byte".equals(field.getType().getName())) {
+									i = Byte.MIN_VALUE;
+								} else if ("short".equals(field.getType().getName())) {
+									i = Short.MIN_VALUE;
+								} else if ("int".equals(field.getType().getName())) {
+									i = Integer.MIN_VALUE;
+								} else if ("float".equals(field.getType().getName())) {
+									i = Float.MIN_VALUE;
+								} else if ("double".equals(field.getType().getName())) {
+									i = Double.MIN_VALUE;
+								}
+							} else {
+								i = field.getType().newInstance();
+							}
+							if (propValue instanceof Long) {
+								if (i instanceof Integer) {
+									i = ((Long) propValue).intValue();
+									propValue = i;
+								} else if (i instanceof Short) {
+									i = ((Long) propValue).shortValue();
+									propValue = i;
+								} else if (i instanceof Byte) {
+									i = ((Long) propValue).byteValue();
+									propValue = i;
+								} else if (i instanceof Float) {
+									i = ((Long) propValue).floatValue();
+									propValue = i;
+								} else if (i instanceof Double) {
+									i = ((Long) propValue).doubleValue();
+									propValue = i;
+								}
+
+							} else if (propValue instanceof Double) {
+								if (i instanceof Float) {
+									i = ((Double) propValue).floatValue();
+									propValue = i;
+								}
+							}
+						}
+						method.invoke(result, propValue);
 					} else if (field.isAnnotationPresent(JsonDateProperty.class)) {
 						JsonDateProperty annotation = field.getAnnotation(JsonDateProperty.class);
 						if (annotation.name() != null && !annotation.name().trim().isEmpty()) {

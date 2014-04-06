@@ -90,7 +90,7 @@ public class FileInspector {
 		String hashPrev = album.getInfo().getContentHash();
 		album.getInfo().setFechaActualizacion(null);
 		album.getInfo().setContentHash(null);
-		String contenidoSinHash = JsonConverter.buildJson(result).toJSONString();
+		String contenidoSinHash = JsonConverter.buildJson(album).toJSONString();
 		result = HashUtils.getHash(contenidoSinHash);
 		album.getInfo().setFechaActualizacion(fechaActPrev);
 		album.getInfo().setContentHash(hashPrev);
@@ -239,7 +239,7 @@ public class FileInspector {
 	}
 	
 	protected void salvarAlbum(Album album, File directorio) throws IOException {
-		File archivoAlbum = new File(album.getPath()+File.separator+album.getFilename());
+		File archivoAlbum = new File(directorio.getPath()+File.separator+dbTextFileName);
 		if (!archivoAlbum.exists()) {
 			archivoAlbum.createNewFile();
 		}
@@ -255,8 +255,8 @@ public class FileInspector {
 		Album result= null;
 		File directorio = new File(path);
 		if (directorio != null && directorio.exists() && directorio.isDirectory() && directorio.canRead() && directorio.canExecute()) {
-			List<Album> lst = armarAlbum(directorio, true);
-			if (lst != null && lst.isEmpty())
+			List<Album> lst = armarAlbum(directorio, false);
+			if (lst != null && !lst.isEmpty())
 				result = lst.get(0);
 		}
 		return result;
@@ -362,6 +362,18 @@ public class FileInspector {
 
 	public List<Album> getAlbumes() {
 		return albumes;
+	}
+
+	public String getDbTextFileName() {
+		return dbTextFileName;
+	}
+
+	public String getDbFileEncoding() {
+		return dbFileEncoding;
+	}
+
+	public String[] getExtensiones() {
+		return extensiones;
 	}
 	
 }

@@ -26,11 +26,13 @@ public class JsonConverterTest {
 		String strFechaUTC = JsonConverter.buildJsonDate(DateTime.class, fechaUTC);
 		String strFechaGMT5 = JsonConverter.buildJsonDate(DateTime.class, fechaGMT5);
 		String strFechaL = JsonConverter.buildJsonDate(Date.class, fechaL);
+		String strFechaNula = JsonConverter.buildJsonDate(Date.class, null);
 		
 		Assert.assertEquals(strFechaLocal, "1982-12-13T17:34:44.000Z");
 		Assert.assertEquals(strFechaUTC, "1982-12-13T14:34:44.000Z");
 		Assert.assertEquals(strFechaGMT5, "1982-12-13T19:34:44.000Z");
 		Assert.assertEquals(strFechaL, "1982-12-13T17:34:44.000Z");
+		Assert.assertNull(strFechaNula);
 	}
 	
 	@Test
@@ -43,9 +45,11 @@ public class JsonConverterTest {
 		
 		DateTime _fechaLocal = JsonConverter.buildDateFromJson(DateTime.class, strFechaUTC);
 		Date _fechaL = JsonConverter.buildDateFromJson(Date.class, strFechaUTC);
+		Date _fechaNula = JsonConverter.buildDateFromJson(Date.class, null);
 		
-		Assert.assertEquals(_fechaLocal, fechaLocal);
+		Assert.assertEquals(_fechaLocal, fechaLocal);		
 		Assert.assertEquals(_fechaL, fechaL);
+		Assert.assertNull(_fechaNula);
 	}
 
 	@SuppressWarnings("unchecked")
