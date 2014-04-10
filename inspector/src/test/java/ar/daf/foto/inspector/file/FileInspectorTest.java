@@ -263,7 +263,7 @@ public class FileInspectorTest {
 				Assert.assertNotNull(album.getInfo());
 				Assert.assertNotNull(album.getImagenes());
 				Assert.assertNotEquals(album.getImagenes().size(), 0);
-				if (!albumBaseVerificado && album.getFilename().equals(pathBase.getFileName().toString())) {
+				if (!albumBaseVerificado && album.getFileName().equals(pathBase.getFileName().toString())) {
 					albumBaseVerificado = true;
 					Assert.assertEquals(album.getImagenes().size(), 3);
 					album.setTitulo("armarAlbumFotoInspectorTest");
@@ -273,7 +273,7 @@ public class FileInspectorTest {
 					String strJson = JsonConverter.buildJson(album).toJSONString();
 					Assert.assertEquals(strJson, "{\"tags\":null,\"imagenes\":[{\"fileNameSmall\":null,\"tags\":null,\"titulo\":\"Fotogato.pNG\",\"fileName\":\"Fotogato.pNG\",\"descripcion\":null},{\"fileNameSmall\":null,\"tags\":null,\"titulo\":\"FotoPerro.PNG\",\"fileName\":\"FotoPerro.PNG\",\"descripcion\":null},{\"fileNameSmall\":null,\"tags\":null,\"titulo\":\"fotoYo.png\",\"fileName\":\"fotoYo.png\",\"descripcion\":null}],\"titulo\":\"armarAlbumFotoInspectorTest\",\"fecha\":null,\"descripcion\":null,\"imagenPortada\":null,\"ubicacion\":null,\"info\":{\"versionRevision\":0,\"versionMenor\":1,\"fechaActualizacion\":null,\"versionMayor\":0,\"contentHash\":\"b33aa2440c6e479003cae01f25f14c8014036e67\"}}");
 					
-				} else if (!albumNavidadVerificado && album.getFilename().equals(pathNavidad.getFileName().toString())) {
+				} else if (!albumNavidadVerificado && album.getFileName().equals(pathNavidad.getFileName().toString())) {
 					albumNavidadVerificado = true;
 					Assert.assertEquals(album.getImagenes().size(), 4);
 					album.setFecha(null);
@@ -282,7 +282,7 @@ public class FileInspectorTest {
 					String strJson = JsonConverter.buildJson(album).toJSONString();
 					Assert.assertEquals(strJson, "{\"tags\":null,\"imagenes\":[{\"fileNameSmall\":null,\"tags\":null,\"titulo\":\"limpiando.png\",\"fileName\":\"limpiando.png\",\"descripcion\":null},{\"fileNameSmall\":null,\"tags\":null,\"titulo\":\"festejando.png\",\"fileName\":\"festejando.png\",\"descripcion\":null},{\"fileNameSmall\":null,\"tags\":null,\"titulo\":\"bridando.png\",\"fileName\":\"bridando.png\",\"descripcion\":null},{\"fileNameSmall\":null,\"tags\":null,\"titulo\":\"cenando.png\",\"fileName\":\"cenando.png\",\"descripcion\":null}],\"titulo\":\"Navidad\",\"fecha\":null,\"descripcion\":null,\"imagenPortada\":null,\"ubicacion\":null,\"info\":{\"versionRevision\":0,\"versionMenor\":1,\"fechaActualizacion\":null,\"versionMayor\":0,\"contentHash\":\"b33aa2440c6e479003cae01f25f14c8014036e67\"}}");
 					
-				} else if (!albumVacaciones1998Verificado && album.getFilename().equals(pathVacaciones1998.getFileName().toString())) {
+				} else if (!albumVacaciones1998Verificado && album.getFileName().equals(pathVacaciones1998.getFileName().toString())) {
 					albumVacaciones1998Verificado = true;
 					Assert.assertEquals(album.getImagenes().size(), 3);
 					album.setFecha(null);
@@ -291,7 +291,7 @@ public class FileInspectorTest {
 					String strJson = JsonConverter.buildJson(album).toJSONString();
 					Assert.assertEquals(strJson, "{\"tags\":null,\"imagenes\":[{\"fileNameSmall\":null,\"tags\":null,\"titulo\":\"foto003.jpg\",\"fileName\":\"foto003.jpg\",\"descripcion\":null},{\"fileNameSmall\":null,\"tags\":null,\"titulo\":\"foto002.jpg\",\"fileName\":\"foto002.jpg\",\"descripcion\":null},{\"fileNameSmall\":null,\"tags\":null,\"titulo\":\"foto001.jpg\",\"fileName\":\"foto001.jpg\",\"descripcion\":null}],\"titulo\":\"1998\",\"fecha\":null,\"descripcion\":null,\"imagenPortada\":null,\"ubicacion\":null,\"info\":{\"versionRevision\":0,\"versionMenor\":1,\"fechaActualizacion\":null,\"versionMayor\":0,\"contentHash\":\"b33aa2440c6e479003cae01f25f14c8014036e67\"}}");
 					
-				} else if (!albumVacaciones2010Verificado && album.getFilename().equals(pathVacaciones2010.getFileName().toString())) {
+				} else if (!albumVacaciones2010Verificado && album.getFileName().equals(pathVacaciones2010.getFileName().toString())) {
 					albumVacaciones2010Verificado = true;
 					Assert.assertEquals(album.getImagenes().size(), 3);
 					album.setFecha(null);

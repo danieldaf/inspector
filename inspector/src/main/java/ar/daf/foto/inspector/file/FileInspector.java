@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.hibernate.Session;
 import org.joda.time.DateTime;
 import org.json.simple.JSONObject;
 
@@ -99,7 +100,7 @@ public class FileInspector {
 	
 	protected boolean verificarVigenciaAlbum(Album album, File directorio, File archivosImagenes[]) throws NoSuchAlgorithmException {
 		boolean result = false;
-		if (album != null && album.getPath() != null && album.getFilename() != null) {
+		if (album != null && album.getPath() != null && album.getFileName() != null) {
 			if (album.getInfo() == null) {
 				result = true;
 			} else {
@@ -216,7 +217,7 @@ public class FileInspector {
 		result.setTags(null);
 		result.setFecha(null);
 		result.setPath(directorio.getParent());
-		result.setFilename(directorio.getName());
+		result.setFileName(directorio.getName());
 		result.setImagenes(new ArrayList<Imagen>());
 		
 		DateTime firstDate = null;
@@ -338,6 +339,30 @@ public class FileInspector {
 			e.printStackTrace();
 		}
 		return result;
+	}
+	
+	public List<Album> mergeAlbumes(List<Album> lstSrc, Session session) {
+		List<Album> lstOut = new ArrayList<Album>();
+		if (lstSrc != null && !lstSrc.isEmpty()) {
+			session.beginTransaction();
+			for (Album albumIn : lstSrc) {
+				Album albumOut = null;
+				if (albumIn.getId() != null) {
+					albumOut = (Album)session.get(Album.class, albumIn.getId());
+					if (albumOut != null) {
+						albumOut = (Album)session.merge(albumIn);
+					} else {
+						albumOut = albumIn;
+						albumOut.setId(null);
+					}
+				} else {
+					albumOut = albumIn;
+				}
+				session.saveOrUpdate(albumOut);
+			}
+			session.getTransaction().commit();
+		}
+		return lstOut;
 	}
 
 	public String getPathBase() {
