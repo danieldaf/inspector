@@ -63,7 +63,7 @@ public class Album {
 	@JsonProperty
 	private String imagenPortada;
 	
-	@OneToMany(cascade={CascadeType.REMOVE}, fetch=FetchType.LAZY, mappedBy="album")
+	@OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY, mappedBy="album")
 	@NotNull
 	@JsonProperty(typeClass=ArrayList.class)
 	private List<Imagen> imagenes;
