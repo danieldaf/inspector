@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.hibernate.Session;
 import org.joda.time.DateTime;
 import org.json.simple.JSONObject;
 
@@ -341,30 +340,6 @@ public class FileInspector {
 		return result;
 	}
 	
-	public List<Album> mergeAlbumes(List<Album> lstSrc, Session session) {
-		List<Album> lstOut = new ArrayList<Album>();
-		if (lstSrc != null && !lstSrc.isEmpty()) {
-			session.beginTransaction();
-			for (Album albumIn : lstSrc) {
-				Album albumOut = null;
-				if (albumIn.getId() != null) {
-					albumOut = (Album)session.get(Album.class, albumIn.getId());
-					if (albumOut != null) {
-						albumOut = (Album)session.merge(albumIn);
-					} else {
-						albumOut = albumIn;
-						albumOut.setId(null);
-					}
-				} else {
-					albumOut = albumIn;
-				}
-				session.saveOrUpdate(albumOut);
-			}
-			session.getTransaction().commit();
-		}
-		return lstOut;
-	}
-
 	public String getPathBase() {
 		return pathBase;
 	}
