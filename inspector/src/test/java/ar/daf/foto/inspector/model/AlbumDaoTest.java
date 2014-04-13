@@ -21,6 +21,7 @@ public class AlbumDaoTest {
 	private AlbumDaoImpl albumDao;
 	private Album album;
 	
+	@SuppressWarnings("deprecation")
 	@BeforeTest
 	public void setup() throws NoSuchAlgorithmException {
 		sessionFactory = new Configuration().configure().buildSessionFactory();
@@ -47,7 +48,7 @@ public class AlbumDaoTest {
 		album.setUbicacion(ubicacion);
 		album.setFileName("albumcito");
 		album.setImagenes(new ArrayList<Imagen>());
-		album.setImagenPortada("Layola.bmp");
+		album.setImagenPortada(null);
 		album.setPath("/home/xxx/imagenes/fotos/albumes");
 		album.setFecha(null);
 		
@@ -67,6 +68,7 @@ public class AlbumDaoTest {
 		img02.setFileNameSmall("thumb_0002.png");
 		album.getImagenes().add(img01);
 		album.getImagenes().add(img02);
+		album.setImagenPortada(img02);
 	}
 	
 	@AfterTest
@@ -105,6 +107,8 @@ public class AlbumDaoTest {
 			Assert.assertNotNull(albumRecargado.getImagenes());
 			Assert.assertEquals(albumRecargado.getTitulo(), album.getTitulo());
 			Assert.assertEquals(albumRecargado.getInfo().getContentHash(), album.getInfo().getContentHash());
+			Assert.assertNotNull(albumRecargado.getImagenPortada());
+			Assert.assertEquals(albumRecargado.getImagenPortada().getFileName(), album.getImagenPortada().getFileName());
 			Assert.assertEquals(albumRecargado.getImagenes().size(), album.getImagenes().size());
 		} finally {
 			sessionFactory.getCurrentSession().getTransaction().commit();

@@ -1,8 +1,9 @@
 apply plugin: 'java'
 apply plugin: 'eclipse'
+apply plugin: 'spring-boot'
 
-sourceCompatibility = 1.6
-version = '0.1'
+sourceCompatibility = 1.7
+version = '0.1.0'
 jar {
     manifest {
         attributes 'Implementation-Title': 'Inspector de Fotos', 'Implementation-Version': version
@@ -13,19 +14,32 @@ repositories {
     mavenCentral()
 }
 
+buildscript {
+    repositories {
+        maven { url "http://repo.spring.io/libs-snapshot" }
+        mavenLocal()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.0.1.RELEASE")
+    }
+}
+
 dependencies {
-    compile group: 'commons-collections', name: 'commons-collections', version: '3.2'
-	compile group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
-	compile group: 'joda-time', name: 'joda-time', version: '2.3'
-	compile group: 'org.hibernate', name: 'hibernate-core', version: '4.3.5.Final'
-	compile group: 'org.hibernate', name: 'hibernate-validator', version: '5.1.0.Final'
-	compile group: 'javax.el', name: 'javax.el-api', version: '2.2.4'
-	compile group: 'org.hibernate', name: 'hibernate-validator-cdi', version: '5.1.0.Final'
-	compile group: 'org.hsqldb', name: 'hsqldb', version: '2.3.2'
-	compile group: 'org.jadira.usertype', name: 'usertype.core', version: '3.1.0.GA'
-	compile group: 'org.apache.commons', name: 'commons-dbcp2', version: '2.0'
+	compile 'org.springframework.boot:spring-boot-starter-web:1.0.1.RELEASE'
+	compile 'org.springframework.hateoas:spring-hateoas:0.10.0.RELEASE'
+	compile 'com.fasterxml.jackson.core:jackson-databind:2.3.3'
+    compile 'commons-collections:commons-collections:3.2'
+	compile 'com.googlecode.json-simple:json-simple:1.1.1'
+	compile 'joda-time:joda-time:2.3'
+	compile 'org.hibernate:hibernate-core:4.3.5.Final'
+	compile 'org.hibernate:hibernate-validator:5.1.0.Final'
+	compile 'org.hibernate:hibernate-validator-cdi:5.1.0.Final'
+	compile 'javax.el:javax.el-api:2.2.4'
+	compile 'org.hsqldb:hsqldb:2.3.2'
+	compile 'org.jadira.usertype:usertype.core:3.1.0.GA'
+	compile 'org.apache.commons:commons-dbcp2:2.0'
 	
-    testCompile group: 'org.testng', name: 'testng', version: '6.8.8'
+    testCompile 'org.testng:testng:6.8.8'
 }
 
 test {

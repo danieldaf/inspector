@@ -19,6 +19,7 @@ public class DBMSTest {
 	
 	private SessionFactory sessionFactory;
 	
+	@SuppressWarnings("deprecation")
 	@BeforeTest
 	public void setup() {
 		sessionFactory = new Configuration().configure().buildSessionFactory();
@@ -46,9 +47,9 @@ public class DBMSTest {
 		album.setDescripcion("Cuantas fotos manolete!");
 		album.setTags("playa,sierra");
 		album.setUbicacion(null);
-		album.setFileName("albumcito");
+		album.setFileName("albumcitoSinFotos");
 		album.setImagenes(new ArrayList<Imagen>());
-		album.setImagenPortada("Layola.bmp");
+		album.setImagenPortada(null);
 		album.setPath("/home/xxx/imagenes/fotos/albumes");
 		album.setFecha(null);
 		
@@ -79,7 +80,7 @@ public class DBMSTest {
 		Assert.assertEquals(albumDB.getDescripcion(), album.getDescripcion());
 		Assert.assertEquals(albumDB.getTags(), album.getTags());
 		Assert.assertEquals(albumDB.getFileName(), album.getFileName());
-		Assert.assertEquals(albumDB.getImagenPortada(), album.getImagenPortada());
+		Assert.assertNull(albumDB.getImagenPortada());
 		Assert.assertEquals(albumDB.getFileName(), album.getFileName());
 		Assert.assertEquals(albumDB.getPath(), album.getPath());
 		Assert.assertNull(albumDB.getFecha());
@@ -106,9 +107,9 @@ public class DBMSTest {
 		album.setDescripcion("Cuantas fotos manolete!");
 		album.setTags("playa,sierra");
 		album.setUbicacion(ubicacion);
-		album.setFileName("albumcito");
+		album.setFileName("albumcitoConFotos");
 		album.setImagenes(new ArrayList<Imagen>());
-		album.setImagenPortada("Layola.bmp");
+		album.setImagenPortada(null);
 		album.setPath("/home/xxx/imagenes/fotos/albumes");
 		album.setFecha(null);
 		
@@ -128,6 +129,7 @@ public class DBMSTest {
 		img02.setFileNameSmall("thumb_0002.png");
 		album.getImagenes().add(img01);
 		album.getImagenes().add(img02);
+		album.setImagenPortada(img02);
 		
 		Session session = sessionFactory.openSession();
 		session.beginTransaction();
@@ -157,7 +159,8 @@ public class DBMSTest {
 		Assert.assertEquals(albumDB.getDescripcion(), album.getDescripcion());
 		Assert.assertEquals(albumDB.getTags(), album.getTags());
 		Assert.assertEquals(albumDB.getFileName(), album.getFileName());
-		Assert.assertEquals(albumDB.getImagenPortada(), album.getImagenPortada());
+		Assert.assertNotNull(albumDB.getImagenPortada());
+		Assert.assertEquals(albumDB.getImagenPortada().getFileName(), img02.getFileName());
 		Assert.assertEquals(albumDB.getFileName(), album.getFileName());
 		Assert.assertEquals(albumDB.getPath(), album.getPath());
 		Assert.assertNull(albumDB.getFecha());

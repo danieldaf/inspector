@@ -16,7 +16,6 @@ import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-import ar.daf.foto.inspector.model.Album;
 import ar.daf.foto.utilidades.json.JsonConverter;
 
 @Test
@@ -109,7 +108,7 @@ public class FileInspectorTest {
 		}
 		
 		try {
-			Album albumBase = inspector.armarAlbum(pathBase.toString());
+			AlbumFile albumBase = inspector.armarAlbum(pathBase.toString());
 			Assert.assertNotNull(albumBase);
 			Assert.assertNotNull(albumBase.getInfo());
 			Assert.assertEquals(albumBase.getImagenes().size(), 3);
@@ -153,7 +152,7 @@ public class FileInspectorTest {
 		}
 		
 		try {
-			Album albumBase = inspector.armarAlbum(pathBase.toString());
+			AlbumFile albumBase = inspector.armarAlbum(pathBase.toString());
 			Assert.assertNotNull(albumBase);
 			Assert.assertNotNull(albumBase.getInfo());
 			
@@ -207,7 +206,7 @@ public class FileInspectorTest {
 		fotoPerro.renameTo(fotoDumbo);
 		
 		try {
-			Album albumBase = inspector.armarAlbum(pathBase.toString());
+			AlbumFile albumBase = inspector.armarAlbum(pathBase.toString());
 			Assert.assertNotNull(albumBase);
 			Assert.assertNotNull(albumBase.getInfo());
 			Assert.assertEquals(albumBase.getImagenes().size(), 3);
@@ -249,7 +248,7 @@ public class FileInspectorTest {
 		if (fileAlbumVacaciones2010.exists())
 			fileAlbumVacaciones2010.delete();
 		try {
-			List<Album> albumes = inspector.inspeccionar();
+			List<AlbumFile> albumes = inspector.inspeccionar();
 			Assert.assertNotNull(albumes);
 			Assert.assertEquals(albumes.size(), 4);
 			
@@ -258,7 +257,7 @@ public class FileInspectorTest {
 			boolean albumVacaciones1998Verificado = false;
 			boolean albumVacaciones2010Verificado = false;
 			
-			for (Album album : albumes) {
+			for (AlbumFile album : albumes) {
 				Assert.assertNotNull(album);
 				Assert.assertNotNull(album.getInfo());
 				Assert.assertNotNull(album.getImagenes());

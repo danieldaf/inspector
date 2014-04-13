@@ -21,9 +21,6 @@ import java.util.List;
 import org.joda.time.DateTime;
 import org.json.simple.JSONObject;
 
-import ar.daf.foto.inspector.model.Album;
-import ar.daf.foto.inspector.model.AlbumInfo;
-import ar.daf.foto.inspector.model.Imagen;
 import ar.daf.foto.utilidades.HashUtils;
 import ar.daf.foto.utilidades.json.JsonConverter;
 
@@ -43,7 +40,7 @@ public class FileInspector {
 	private FileImageComparator fileImageComparator;
 	
 	private String pathBase;
-	private List<Album> albumes = new ArrayList<Album>();
+	private List<AlbumFile> albumes = new ArrayList<AlbumFile>();
 	
 	public FileInspector(String pathBase) {
 		this.pathBase = pathBase;
@@ -53,7 +50,7 @@ public class FileInspector {
 		this.fileImageComparator = new FileImageComparator();
 	}
 
-	public List<Album> inspeccionar() {
+	public List<AlbumFile> inspeccionar() {
 		albumes.clear();
 		File fileBase = new File(pathBase);
 		if (fileBase != null && fileBase.exists() && fileBase.canRead() && fileBase.isDirectory() && fileBase.canExecute()) {
@@ -62,8 +59,8 @@ public class FileInspector {
 		return albumes;
 	}
 	
-	protected Album cargarAlbum(File dbTxt) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException, IOException {
-		Album result = null;
+	protected AlbumFile cargarAlbum(File dbTxt) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException, IOException {
+		AlbumFile result = null;
 		try {
 			FileInputStream fis = new FileInputStream(dbTxt);
 			DataInputStream dis = new DataInputStream(fis);
@@ -75,7 +72,7 @@ public class FileInspector {
 				strLinea = br.readLine();
 			}
 			br.close();
-			result = JsonConverter.buildObject(Album.class, buffer.toString());
+			result = JsonConverter.buildObject(AlbumFile.class, buffer.toString());
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (UnsupportedEncodingException e) {
@@ -84,7 +81,7 @@ public class FileInspector {
 		return result;
 	}
 	
-	protected String armarHashAlbum(Album album) throws NoSuchAlgorithmException {
+	protected String armarHashAlbum(AlbumFile album) throws NoSuchAlgorithmException {
 		String result = null;
 		DateTime fechaActPrev = album.getInfo().getFechaActualizacion();
 		String hashPrev = album.getInfo().getContentHash();
@@ -97,7 +94,7 @@ public class FileInspector {
 		return result;
 	}
 	
-	protected boolean verificarVigenciaAlbum(Album album, File directorio, File archivosImagenes[]) throws NoSuchAlgorithmException {
+	protected boolean verificarVigenciaAlbum(AlbumFile album, File directorio, File archivosImagenes[]) throws NoSuchAlgorithmException {
 		boolean result = false;
 		if (album != null && album.getPath() != null && album.getFileName() != null) {
 			if (album.getInfo() == null) {
@@ -126,7 +123,7 @@ public class FileInspector {
 										imagenes.add(-posImg-1, nombre);
 									}
 								}
-								for (Imagen img : album.getImagenes()) {
+								for (ImagenFile img : album.getImagenes()) {
 									String nombre = img.getFileName();
 									int posImg = Collections.binarySearch(imagenes, nombre, fileImageComparator);
 									if (posImg < 0) {
@@ -143,7 +140,7 @@ public class FileInspector {
 		return result;
 	}
 	
-	public Album actualizarAlbum(Album album) {
+	public AlbumFile actualizarAlbum(AlbumFile album) {
 		if (album != null) {
 			File directorio = new File(album.getPath());
 			if (directorio != null && directorio.exists() && directorio.isDirectory() && directorio.canRead() && directorio.canExecute()) {
@@ -158,18 +155,18 @@ public class FileInspector {
 		return album;
 	}
 	
-	protected Album actualizarAlbum(Album album, File directorio, File archivosImagenes[]) throws NoSuchAlgorithmException {
+	protected AlbumFile actualizarAlbum(AlbumFile album, File directorio, File archivosImagenes[]) throws NoSuchAlgorithmException {
 		/*
-		 * El album a actualizar fur cargado desde el archivo de disco.
+		 * El album a actualizar fue cargado desde el archivo de disco.
 		 * Por lo tanto todas sus descripciones son correctas en memoria.
 		 * Si se cambiaron a mano, en forma externa hay que actualizar la fecha y el hash correspondiente.
 		 * Otra cosa que pudo haber cambiado sino son las imagenes, los nombres y la cantidad.
 		 * Eso hay que revisarlo.
 		 */
-		List<Imagen> imagenes = new ArrayList<Imagen>();
+		List<ImagenFile> imagenes = new ArrayList<ImagenFile>();
 		for (File archivo : archivosImagenes) {
-			Imagen imagenPrev = null;
-			for (Imagen img : album.getImagenes()) {
+			ImagenFile imagenPrev = null;
+			for (ImagenFile img : album.getImagenes()) {
 				if (archivo.getName().equals(img.getFileName())) {
 					imagenPrev = img;
 					break;
@@ -177,7 +174,7 @@ public class FileInspector {
 			}
 			if (imagenPrev == null) {
 				//El archivo es nuevo
-				imagenPrev = new Imagen();
+				imagenPrev = new ImagenFile();
 				imagenPrev.setTitulo(archivo.getName());
 				imagenPrev.setDescripcion(null);
 				imagenPrev.setTags(null);
@@ -200,9 +197,9 @@ public class FileInspector {
 		return album;
 	}
 	
-	protected Album construirAlbum(File directorio, File archivosImagenes[]) throws NoSuchAlgorithmException {
-		Album result = new Album();
-		AlbumInfo info = new AlbumInfo();
+	protected AlbumFile construirAlbum(File directorio, File archivosImagenes[]) throws NoSuchAlgorithmException {
+		AlbumFile result = new AlbumFile();
+		AlbumInfoFile info = new AlbumInfoFile();
 		info.setVersionMayor(albumVersionMayor);
 		info.setVersionMenor(albumVersionMenor);
 		info.setVersionRevision(albumVersionRevision);
@@ -217,11 +214,11 @@ public class FileInspector {
 		result.setFecha(null);
 		result.setPath(directorio.getParent());
 		result.setFileName(directorio.getName());
-		result.setImagenes(new ArrayList<Imagen>());
+		result.setImagenes(new ArrayList<ImagenFile>());
 		
 		DateTime firstDate = null;
 		for (File archivoImagen : archivosImagenes) {
-			Imagen imagen = new Imagen();
+			ImagenFile imagen = new ImagenFile();
 			imagen.setTitulo(archivoImagen.getName());
 			imagen.setDescripcion(null);
 			imagen.setTags(null);
@@ -238,7 +235,7 @@ public class FileInspector {
 		return result;
 	}
 	
-	protected void salvarAlbum(Album album, File directorio) throws IOException {
+	protected void salvarAlbum(AlbumFile album, File directorio) throws IOException {
 		File archivoAlbum = new File(directorio.getPath()+File.separator+dbTextFileName);
 		if (!archivoAlbum.exists()) {
 			archivoAlbum.createNewFile();
@@ -251,19 +248,19 @@ public class FileInspector {
 		bw.close();
 	}
 	
-	public Album armarAlbum(String path) {
-		Album result= null;
+	public AlbumFile armarAlbum(String path) {
+		AlbumFile result= null;
 		File directorio = new File(path);
 		if (directorio != null && directorio.exists() && directorio.isDirectory() && directorio.canRead() && directorio.canExecute()) {
-			List<Album> lst = armarAlbum(directorio, false);
+			List<AlbumFile> lst = armarAlbum(directorio, false);
 			if (lst != null && !lst.isEmpty())
 				result = lst.get(0);
 		}
 		return result;
 	}
 	
-	public List<Album> armarAlbumes(String path) {
-		List<Album> result = new ArrayList<Album>();
+	public List<AlbumFile> armarAlbumes(String path) {
+		List<AlbumFile> result = new ArrayList<AlbumFile>();
 		File directorio = new File(path);
 		if (directorio != null && directorio.exists() && directorio.isDirectory() && directorio.canRead() && directorio.canExecute()) {
 			result.addAll(armarAlbum(directorio, true));		
@@ -271,14 +268,14 @@ public class FileInspector {
 		return result;
 	}
 	
-	protected List<Album> armarAlbum(File directorio, boolean recursivo) {
-		List<Album> result = new ArrayList<Album>();
+	protected List<AlbumFile> armarAlbum(File directorio, boolean recursivo) {
+		List<AlbumFile> result = new ArrayList<AlbumFile>();
 		try {
 			File archivosDBTxt[] = directorio.listFiles(fileDataBaseTextFilter);
 			
 			File archivosImagenes[] = directorio.listFiles(fileImageFilter);
 			if (archivosImagenes != null && archivosImagenes.length > 0) {
-				Album album = null;
+				AlbumFile album = null;
 				if (archivosDBTxt.length == 1) {
 					//1.- cargar album desde db
 					try {
@@ -360,7 +357,7 @@ public class FileInspector {
 		return albumVersionRevision;
 	}
 
-	public List<Album> getAlbumes() {
+	public List<AlbumFile> getAlbumes() {
 		return albumes;
 	}
 

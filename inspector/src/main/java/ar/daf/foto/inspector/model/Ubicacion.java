@@ -6,27 +6,20 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
 
-import ar.daf.foto.utilidades.json.JsonClass;
-import ar.daf.foto.utilidades.json.JsonProperty;
-
 @Embeddable
-@JsonClass
 public class Ubicacion {
+
 	@Column(name="POSICIONAMIENTO")
 	@NotNull
-	@JsonProperty
 	private boolean posicionamiento;
 	@Column(name="LATITUD")
 	@NotNull
-	@JsonProperty
 	private double latitud;
 	@Column(name="LONGITUD")
 	@NotNull
-	@JsonProperty
 	private double longitud;
 	@Column(name="DIRECCION")
 	@Length(min=0, max=1024)
-	@JsonProperty
 	private String direccion;
 	
 	public boolean isPosicionamiento() {
