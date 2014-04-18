@@ -14,7 +14,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.Length;
 
 @Entity
-@Table(name="IMAGEN", indexes={@Index(name="IMAGEN_FILENAME_INDEX", columnList="ALBUM_ID, FILENAME", unique=true)})
+@Table(name="IMAGEN", indexes={@Index(name="IMAGEN_FILENAME_INDEX", columnList="ALBUM_ID,FILENAME", unique=true)})
 public class Imagen {
 	
 	@Id

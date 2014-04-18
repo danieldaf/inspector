@@ -16,30 +16,37 @@ repositories {
 
 buildscript {
     repositories {
-        maven { url "http://repo.spring.io/libs-snapshot" }
-        mavenLocal()
+		mavenCentral()
+    	mavenLocal()
+        maven {
+			url 'http://repo.spring.io/plugins-release'
+			url 'http://repo.spring.io/libs-snapshot'
+		}
     }
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.0.1.RELEASE")
+        classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.0.1.RELEASE' 
     }
 }
 
 dependencies {
 	compile 'org.springframework.boot:spring-boot-starter-web:1.0.1.RELEASE'
+	compile 'org.springframework:spring-orm:4.0.3.RELEASE'
 	compile 'org.springframework.hateoas:spring-hateoas:0.10.0.RELEASE'
-	compile 'com.fasterxml.jackson.core:jackson-databind:2.3.3'
-    compile 'commons-collections:commons-collections:3.2'
+	runtime 'com.fasterxml.jackson.core:jackson-core:2.3.3'
+	runtime 'com.fasterxml.jackson.core:jackson-databind:2.3.3'
+	compile 'commons-collections:commons-collections:3.2'
 	compile 'com.googlecode.json-simple:json-simple:1.1.1'
 	compile 'joda-time:joda-time:2.3'
 	compile 'org.hibernate:hibernate-core:4.3.5.Final'
 	compile 'org.hibernate:hibernate-validator:5.1.0.Final'
 	compile 'org.hibernate:hibernate-validator-cdi:5.1.0.Final'
 	compile 'javax.el:javax.el-api:2.2.4'
-	compile 'org.hsqldb:hsqldb:2.3.2'
+	runtime 'org.hsqldb:hsqldb:2.3.2'
 	compile 'org.jadira.usertype:usertype.core:3.1.0.GA'
 	compile 'org.apache.commons:commons-dbcp2:2.0'
+	compile 'javax.servlet:javax.servlet-api:3.0.1'
 	
-    testCompile 'org.testng:testng:6.8.8'
+	testCompile 'org.testng:testng:6.8.8'
 }
 
 test {
