@@ -25,11 +25,8 @@ import org.springframework.dao.annotation.PersistenceExceptionTranslationPostPro
 import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
 
-import ar.daf.foto.inspector.model.AlbumDaoImpl;
-import ar.daf.foto.inspector.rest.AlbumRestCtrl;
-
 @Configuration
-@ComponentScan(basePackageClasses={AlbumDaoImpl.class, AlbumRestCtrl.class})
+@ComponentScan(basePackages={"ar.daf.foto.inspector"})
 @EnableAutoConfiguration(exclude={JpaBaseConfiguration.class, HibernateJpaAutoConfiguration.class, JpaRepositoriesAutoConfiguration.class, DataSourceAutoConfiguration.class, MessageSourceAutoConfiguration.class, AopAutoConfiguration.class, JmxAutoConfiguration.class})
 public class CoreConfig {
 
