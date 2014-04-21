@@ -7,33 +7,25 @@ import org.joda.time.DateTime;
 
 import ar.daf.foto.inspector.model.Album;
 import ar.daf.foto.inspector.model.Imagen;
-import ar.daf.foto.utilidades.json.JsonClass;
-import ar.daf.foto.utilidades.json.JsonDateProperty;
-import ar.daf.foto.utilidades.json.JsonProperty;
 
-@JsonClass
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 public class AlbumFile {
 	
-	@JsonProperty
 	private AlbumInfoFile info;
 
-	@JsonProperty
 	private String titulo;
-	@JsonProperty
 	private String descripcion;
-	@JsonProperty
 	private String tags;
-	@JsonDateProperty
 	private DateTime fecha;
-	@JsonProperty
 	private UbicacionFile ubicacion;
-	@JsonProperty
 	private String imagenPortada;
 	
-	@JsonProperty(typeClass=ArrayList.class)
 	private List<ImagenFile> imagenes;
 	
+	@JsonIgnoreProperties
 	private String path;
+	@JsonIgnoreProperties
 	private String fileName;
 	
 	public static AlbumFile fromAlbum(Album album) {

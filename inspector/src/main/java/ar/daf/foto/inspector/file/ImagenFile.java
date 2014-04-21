@@ -1,22 +1,14 @@
 package ar.daf.foto.inspector.file;
 
 import ar.daf.foto.inspector.model.Imagen;
-import ar.daf.foto.utilidades.json.JsonClass;
-import ar.daf.foto.utilidades.json.JsonProperty;
 
-@JsonClass
 public class ImagenFile {
 	
-	@JsonProperty
 	private String titulo;
-	@JsonProperty
 	private String descripcion;
-	@JsonProperty
 	private String tags;
 
-	@JsonProperty
 	private String fileName;
-	@JsonProperty
 	private String fileNameSmall;
 	
 	public static ImagenFile fromImagen(Imagen imagen) {

@@ -19,10 +19,11 @@ import java.util.Collections;
 import java.util.List;
 
 import org.joda.time.DateTime;
-import org.json.simple.JSONObject;
 
 import ar.daf.foto.utilidades.HashUtils;
-import ar.daf.foto.utilidades.json.JsonConverter;
+import ar.daf.foto.utilidades.JsonConverter;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 public class FileInspector {
 	
@@ -54,7 +55,11 @@ public class FileInspector {
 		albumes.clear();
 		File fileBase = new File(pathBase);
 		if (fileBase != null && fileBase.exists() && fileBase.canRead() && fileBase.isDirectory() && fileBase.canExecute()) {
-			albumes.addAll(armarAlbum(fileBase, true));
+			try {
+				albumes.addAll(armarAlbum(fileBase, true));
+			} catch (JsonProcessingException e) {
+				e.printStackTrace();
+			}
 		}
 		return albumes;
 	}
@@ -81,20 +86,20 @@ public class FileInspector {
 		return result;
 	}
 	
-	protected String armarHashAlbum(AlbumFile album) throws NoSuchAlgorithmException {
+	protected String armarHashAlbum(AlbumFile album) throws NoSuchAlgorithmException, JsonProcessingException {
 		String result = null;
 		DateTime fechaActPrev = album.getInfo().getFechaActualizacion();
 		String hashPrev = album.getInfo().getContentHash();
 		album.getInfo().setFechaActualizacion(null);
 		album.getInfo().setContentHash(null);
-		String contenidoSinHash = JsonConverter.buildJson(album).toJSONString();
+		String contenidoSinHash = JsonConverter.buildJson(album);
 		result = HashUtils.getHash(contenidoSinHash);
 		album.getInfo().setFechaActualizacion(fechaActPrev);
 		album.getInfo().setContentHash(hashPrev);
 		return result;
 	}
 	
-	protected boolean verificarVigenciaAlbum(AlbumFile album, File directorio, File archivosImagenes[]) throws NoSuchAlgorithmException {
+	protected boolean verificarVigenciaAlbum(AlbumFile album, File directorio, File archivosImagenes[]) throws NoSuchAlgorithmException, JsonProcessingException {
 		boolean result = false;
 		if (album != null && album.getPath() != null && album.getFileName() != null) {
 			if (album.getInfo() == null) {
@@ -149,13 +154,15 @@ public class FileInspector {
 					album = actualizarAlbum(album, directorio, archivosImagenes);
 				} catch (NoSuchAlgorithmException e) {
 					e.printStackTrace();
+				} catch (JsonProcessingException e) {
+					e.printStackTrace();
 				}
 			}
 		}
 		return album;
 	}
 	
-	protected AlbumFile actualizarAlbum(AlbumFile album, File directorio, File archivosImagenes[]) throws NoSuchAlgorithmException {
+	protected AlbumFile actualizarAlbum(AlbumFile album, File directorio, File archivosImagenes[]) throws NoSuchAlgorithmException, JsonProcessingException {
 		/*
 		 * El album a actualizar fue cargado desde el archivo de disco.
 		 * Por lo tanto todas sus descripciones son correctas en memoria.
@@ -197,7 +204,7 @@ public class FileInspector {
 		return album;
 	}
 	
-	protected AlbumFile construirAlbum(File directorio, File archivosImagenes[]) throws NoSuchAlgorithmException {
+	protected AlbumFile construirAlbum(File directorio, File archivosImagenes[]) throws NoSuchAlgorithmException, JsonProcessingException {
 		AlbumFile result = new AlbumFile();
 		AlbumInfoFile info = new AlbumInfoFile();
 		info.setVersionMayor(albumVersionMayor);
@@ -241,10 +248,10 @@ public class FileInspector {
 			archivoAlbum.createNewFile();
 		}
 		album.getInfo().setFechaActualizacion(new DateTime(directorio.lastModified()));
-		JSONObject json = JsonConverter.buildJson(album);
+		String json = JsonConverter.buildJson(album);
 		FileOutputStream fos = new FileOutputStream(archivoAlbum);
 		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos, dbFileEncoding));
-		bw.write(json.toJSONString());
+		bw.write(json);
 		bw.close();
 	}
 	
@@ -252,9 +259,14 @@ public class FileInspector {
 		AlbumFile result= null;
 		File directorio = new File(path);
 		if (directorio != null && directorio.exists() && directorio.isDirectory() && directorio.canRead() && directorio.canExecute()) {
-			List<AlbumFile> lst = armarAlbum(directorio, false);
-			if (lst != null && !lst.isEmpty())
-				result = lst.get(0);
+			List<AlbumFile> lst;
+			try {
+				lst = armarAlbum(directorio, false);
+				if (lst != null && !lst.isEmpty())
+					result = lst.get(0);
+			} catch (JsonProcessingException e) {
+				e.printStackTrace();
+			}
 		}
 		return result;
 	}
@@ -263,12 +275,16 @@ public class FileInspector {
 		List<AlbumFile> result = new ArrayList<AlbumFile>();
 		File directorio = new File(path);
 		if (directorio != null && directorio.exists() && directorio.isDirectory() && directorio.canRead() && directorio.canExecute()) {
-			result.addAll(armarAlbum(directorio, true));		
+			try {
+				result.addAll(armarAlbum(directorio, true));
+			} catch (JsonProcessingException e) {
+				e.printStackTrace();
+			}		
 		}
 		return result;
 	}
 	
-	protected List<AlbumFile> armarAlbum(File directorio, boolean recursivo) {
+	protected List<AlbumFile> armarAlbum(File directorio, boolean recursivo) throws JsonProcessingException {
 		List<AlbumFile> result = new ArrayList<AlbumFile>();
 		try {
 			File archivosDBTxt[] = directorio.listFiles(fileDataBaseTextFilter);

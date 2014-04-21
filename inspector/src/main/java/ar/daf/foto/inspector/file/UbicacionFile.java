@@ -1,19 +1,12 @@
 package ar.daf.foto.inspector.file;
 
 import ar.daf.foto.inspector.model.Ubicacion;
-import ar.daf.foto.utilidades.json.JsonClass;
-import ar.daf.foto.utilidades.json.JsonProperty;
 
-@JsonClass
 public class UbicacionFile {
 
-	@JsonProperty
 	private boolean posicionamiento;
-	@JsonProperty
 	private double latitud;
-	@JsonProperty
 	private double longitud;
-	@JsonProperty
 	private String direccion;
 	
 	public static UbicacionFile fromUbicacion(Ubicacion ubicacion) {

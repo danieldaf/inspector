@@ -3,11 +3,10 @@ package ar.daf.foto.inspector.model;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
-import junit.framework.Assert;
-
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.joda.time.DateTime;
+import org.testng.Assert;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;

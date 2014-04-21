@@ -3,21 +3,14 @@ package ar.daf.foto.inspector.file;
 import org.joda.time.DateTime;
 
 import ar.daf.foto.inspector.model.AlbumInfo;
-import ar.daf.foto.utilidades.json.JsonClass;
-import ar.daf.foto.utilidades.json.JsonDateProperty;
-import ar.daf.foto.utilidades.json.JsonProperty;
 
-@JsonClass
 public class AlbumInfoFile {
 	
 	/**
 	 * Los campos versionMayor, versionMenor y versionRevision indican el nro de version de la base de datos
 	 */
-	@JsonProperty
 	private int versionMayor;
-	@JsonProperty
 	private int versionMenor;
-	@JsonProperty
 	private int versionRevision;
 	
 	public static AlbumInfoFile fromAlbumInfo(AlbumInfo albumInfo) {
@@ -46,13 +39,11 @@ public class AlbumInfoFile {
 	 * Este campo contiene la fecha de actualizacion de la carpeta que contiene el album.
 	 * Se empla para determinar con rapidez si es necesario o no actualizar el album.
 	 */
-	@JsonDateProperty
 	private DateTime fechaActualizacion;
 	/**
 	 * Este campo cotiene un hash usando SHA1 del archivo de texto (json) del album.
 	 * El hash se calcula poniendo el campo hashContent y fechaActualizacion en null.
 	 */
-	@JsonProperty
 	private String contentHash;
 
 	public DateTime getFechaActualizacion() {
