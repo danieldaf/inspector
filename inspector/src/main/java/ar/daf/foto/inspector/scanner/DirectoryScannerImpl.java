@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -21,6 +22,10 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
+import ar.daf.foto.inspector.file.AlbumFile;
+import ar.daf.foto.inspector.file.FileInspector;
+import ar.daf.foto.inspector.model.Album;
+import ar.daf.foto.inspector.model.AlbumDao;
 import ar.daf.foto.utilidades.JsonConverter;
 
 @Service
@@ -34,7 +39,12 @@ public class DirectoryScannerImpl implements DirectoryScanner {
 	private String fileConfig;
 	
 	@Autowired
-	private ServiceConfig config;
+	private ServiceConfig config;	
+	@Autowired
+	private AlbumDao albumDao;
+	
+	protected List<FileInspector> inspectores = new ArrayList<FileInspector>();
+	protected List<Album> albumes = new ArrayList<Album>();
 	
 	@PostConstruct
 	public void onPostStringConfigure() {
@@ -137,10 +147,43 @@ public class DirectoryScannerImpl implements DirectoryScanner {
 		return result;
 	}
 	
-	public void scan() {
+	public void updateInspectors() {
+		List<FileInspector> tmpfi = new ArrayList<FileInspector>();
 		for (String path : config.getPaths()) {
-			
+			FileInspector inspector = new FileInspector(path);
+			tmpfi.add(inspector);
 		}
+		synchronized (inspectores) {
+			inspectores.clear();
+			inspectores.addAll(tmpfi);
+		}
+	}
+	
+	public void scan() {
+		List<FileInspector> tmpfi = new ArrayList<FileInspector>();
+		synchronized (inspectores) {
+			tmpfi.addAll(inspectores);
+		}
+		List<Album> newAlbumes = new ArrayList<Album>();
+		for (FileInspector inspector : tmpfi) {
+			List<AlbumFile> albumesF = inspector.inspeccionar();
+			List<Album> albumes = mergeAlbumes(albumesF);
+			newAlbumes.addAll(albumes);
+		}
+		synchronized (albumes) {
+			albumes.clear();
+			albumes.addAll(newAlbumes);
+		}
+	}
+	
+	protected List<Album> mergeAlbumes(List<AlbumFile> inAlbumes) {
+		List<Album> outAlbumes = new ArrayList<Album>();
+		for (AlbumFile inA : inAlbumes) {
+			Album outA = AlbumFile.toAlbum(inA);			
+			outAlbumes.add(outA);
+		}
+		outAlbumes = albumDao.actualizarAlbumes(outAlbumes);
+		return outAlbumes;
 	}
 
 }
