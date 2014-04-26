@@ -16,6 +16,8 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -32,9 +34,11 @@ import ar.daf.foto.utilidades.JsonConverter;
 @Scope(value=ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class DirectoryScannerImpl implements DirectoryScanner {
 	
-	public static long READ_INTERVAL_INFINITE = -1;
+	private final Logger log = LoggerFactory.getLogger(getClass()); 
 	
 	private String homePath = null;
+	@Value("${inspector.dirConfig}")
+	private String dirConfig;
 	@Value("${inspector.fileConfigName}")
 	private String fileConfig;
 	
@@ -49,13 +53,27 @@ public class DirectoryScannerImpl implements DirectoryScanner {
 	@PostConstruct
 	public void onPostStringConfigure() {
 		homePath = System.getProperty("user.home");
+		log.info("HOME_DIR='"+homePath+"'");
+		log.info("CONFIG_DIR='"+dirConfig+"'");
+		log.info("CONFIG_FILE='"+fileConfig+"'");
 		boolean configFileOk = existsConfigFile();
 		boolean loadOk = false;
-		if (configFileOk)
+		if (configFileOk) {
 			loadOk = loadConfig();
+			if (loadOk) {
+				log.debug("Archivo de configuracion cargado con exito.");
+			} else {
+				log.error("Error de validacion del archivo de configuracion.");
+				throw new RuntimeException("Error de validacion del archivo de configuracion.");
+			}
+		} else {
+			log.warn("Archivo de configuracion no existe.");
+		}
 		if (!configFileOk || loadOk) {
+			log.debug("Persistiendo configuracion cargda.");
 			saveConfig();
 		}
+		log.info("Configuracion inicial cargada.");
 	}
 	
 	public boolean validateConfig(ServiceConfig cfg) {
@@ -63,8 +81,10 @@ public class DirectoryScannerImpl implements DirectoryScanner {
 			return false;
 		
 		List<String> extensiones = cfg.getExtensiones();
-		if (extensiones == null || extensiones.isEmpty())
+		if (extensiones == null || extensiones.isEmpty()) {
+			log.warn("No hay extensiones validas para identificar los archvios de tipo imagen.");
 			return false;
+		}
 		
 		String tmp = cfg.getDbTextFileName();
 		if (tmp != null)
@@ -75,6 +95,7 @@ public class DirectoryScannerImpl implements DirectoryScanner {
 			String ext = tmp.substring(pos+1).trim().toUpperCase();
 			for (String imgExt : extensiones) {
 				if (ext.equals(imgExt)) {
+					log.warn("La extension del archivo de configuracion '"+tmp+"' no puede estar incluida dentro de las extensiones definidas para los archivos de tipo imagen.");
 					return false;
 				}
 			}
@@ -83,8 +104,12 @@ public class DirectoryScannerImpl implements DirectoryScanner {
 		return true;	
 	}
 	
+	protected String getFullPathFileConfig() {
+		return this.homePath+File.separator+this.dirConfig+File.separator+this.fileConfig;
+	}
+	
 	public boolean existsConfigFile() {
-		File fis = new File(this.homePath+File.separator+this.fileConfig);
+		File fis = new File(getFullPathFileConfig());
 		if (fis != null && fis.exists() && fis.isFile() && fis.canRead())
 			return true;
 		return false;
@@ -94,7 +119,8 @@ public class DirectoryScannerImpl implements DirectoryScanner {
 		boolean result = false;
 		ServiceConfig cfg = null;
 		try {
-			FileInputStream fis = new FileInputStream(this.homePath+File.separator+this.fileConfig);
+			FileInputStream fis = new FileInputStream(getFullPathFileConfig());
+			log.debug("Leyendo archivo de configuracion: '"+fis.toString()+"'");
 			DataInputStream dis = new DataInputStream(fis);
 			BufferedReader br = new BufferedReader(new InputStreamReader(dis, "utf8"));
 			StringBuffer buffer = new StringBuffer();
@@ -104,22 +130,38 @@ public class DirectoryScannerImpl implements DirectoryScanner {
 				strLinea = br.readLine();
 			}
 			br.close();
+			log.debug("Configuracion leido con exito.");
 			cfg = JsonConverter.buildObject(ServiceConfig.class, buffer.toString());
+			log.debug("Configuracion parseado desde su formato JSON.");
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			log.error(e.getMessage());
 		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+			log.error(e.getMessage());
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.error(e.getMessage());
 		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
+			log.error(e.getMessage());
 		}
 		
 		if (cfg != null) {
 			if (validateConfig(cfg)) {
+				log.debug("Configuracion valida.");
 				config = cfg;
 				result = true;
+			} else {
+				log.warn("Configuracion no valida.");
 			}
+		} else {
+			log.warn("No se pudo leer el archivo de configuracion.");
+		}
+		return result;
+	}
+	
+	protected boolean createDirIfNotExists(String dir) {
+		boolean result = false;
+		File fDir = new File(dir);
+		if (!fDir.exists()) {
+			result = fDir.mkdir();
 		}
 		return result;
 	}
@@ -128,9 +170,11 @@ public class DirectoryScannerImpl implements DirectoryScanner {
 		boolean result = false;
 		if (homePath != null) {
 			try {
-				File archivoAlbum = new File(this.homePath+File.separator+this.fileConfig);
+				createDirIfNotExists(this.homePath+File.separator+this.dirConfig);
+				File archivoAlbum = new File(getFullPathFileConfig());
 				String json = JsonConverter.buildJson(config);
 				if (json != null && !json.isEmpty()) {
+					log.debug("Guardando archivo de configuracion '"+archivoAlbum.toString()+"'");
 					if (!archivoAlbum.exists()) {
 						archivoAlbum.createNewFile();
 					}
@@ -138,28 +182,43 @@ public class DirectoryScannerImpl implements DirectoryScanner {
 					BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos, "utf8"));
 					bw.write(json);
 					bw.close();
+				} else {
+					log.warn("No hay ninguna configuracion para guardar.");
 				}
 				result = true;
 			} catch (IOException e) {
-				e.printStackTrace();
+				log.error(e.getMessage());
 			}
 		}
 		return result;
 	}
 	
 	public void updateInspectors() {
-		List<FileInspector> tmpfi = new ArrayList<FileInspector>();
+		log.info("Actualizando los inspectores de directorios.");
+		List<FileInspector> newInspectores= new ArrayList<FileInspector>();
+		List<FileInspector> prevInspectores = new ArrayList<FileInspector>();
+		synchronized (inspectores) {
+			prevInspectores.addAll(inspectores);
+		}
 		for (String path : config.getPaths()) {
 			FileInspector inspector = new FileInspector(path);
-			tmpfi.add(inspector);
+			if (prevInspectores.contains(inspector)) {
+				inspector = prevInspectores.get(prevInspectores.indexOf(inspector));
+				log.debug("Reusando el inspector para el directorio: '"+path+"'");
+			} else {
+				log.debug("Agregado un inspector nuevo para el directorio: '"+path+"'");
+			}
+			newInspectores.add(inspector);
 		}
 		synchronized (inspectores) {
 			inspectores.clear();
-			inspectores.addAll(tmpfi);
+			inspectores.addAll(newInspectores);
 		}
+		log.info("Inspectores de directorios actualizados");
 	}
 	
 	public void scan() {
+		log.info("Actualizando todos los albumes.");
 		List<FileInspector> tmpfi = new ArrayList<FileInspector>();
 		synchronized (inspectores) {
 			tmpfi.addAll(inspectores);
@@ -174,6 +233,7 @@ public class DirectoryScannerImpl implements DirectoryScanner {
 			albumes.clear();
 			albumes.addAll(newAlbumes);
 		}
+		log.info("Albumes actualizados.");
 	}
 	
 	protected List<Album> mergeAlbumes(List<AlbumFile> inAlbumes) {

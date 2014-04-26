@@ -1,5 +1,6 @@
 package ar.daf.foto.inspector.config;
 
+import java.io.File;
 import java.util.Properties;
 
 import javax.sql.DataSource;
@@ -8,6 +9,7 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.commons.dbcp2.BasicDataSourceFactory;
 import org.crsh.spring.SpringWebBootstrap;
 import org.hibernate.SessionFactory;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.MessageSourceAutoConfiguration;
@@ -25,13 +27,36 @@ import org.springframework.dao.annotation.PersistenceExceptionTranslationPostPro
 import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
 
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.rolling.RollingFileAppender;
+
 @Configuration
 @ComponentScan(basePackages={"ar.daf.foto.inspector"})
 @EnableAutoConfiguration(exclude={JpaBaseConfiguration.class, HibernateJpaAutoConfiguration.class, JpaRepositoriesAutoConfiguration.class, DataSourceAutoConfiguration.class, MessageSourceAutoConfiguration.class, AopAutoConfiguration.class, JmxAutoConfiguration.class})
 public class CoreConfig {
 
-	@Autowired
 	private Environment env;
+	
+	@Autowired
+	public void setEnviroment(Environment env) {
+		this.env = env;
+		String homePath = System.getProperty("user.home");
+		String dirConfig = env.getProperty("inspector.dirConfig");
+		File file = new File(homePath+File.separator+dirConfig);
+		if (!file.exists()) {
+			file.mkdir();
+		}
+//		System.setProperty("dirConfig", file.toString());
+		LoggerContext loggerContext = (LoggerContext)LoggerFactory.getILoggerFactory();
+		Logger rootLogger = loggerContext.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME);
+		RollingFileAppender<ILoggingEvent> appenderFile = (RollingFileAppender<ILoggingEvent>)rootLogger.getAppender("file");
+		appenderFile.stop();
+		String logFileName = appenderFile.getFile();
+		appenderFile.setFile(file.toString()+File.separator+logFileName);
+		appenderFile.start();
+	}
 	
 	@Bean
 	public DataSource dataSource() throws Exception {
