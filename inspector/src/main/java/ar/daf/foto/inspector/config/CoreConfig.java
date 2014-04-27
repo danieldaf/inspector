@@ -9,8 +9,11 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.commons.dbcp2.BasicDataSourceFactory;
 import org.crsh.spring.SpringWebBootstrap;
 import org.hibernate.SessionFactory;
+import org.quartz.JobDetail;
+import org.quartz.Trigger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.MessageSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.aop.AopAutoConfiguration;
@@ -22,15 +25,21 @@ import org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
+import org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean;
+import org.springframework.scheduling.quartz.SchedulerFactoryBean;
+import org.springframework.scheduling.quartz.SimpleTriggerFactoryBean;
 
+import ar.daf.foto.inspector.scanner.DirectoryScanner;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.rolling.RollingFileAppender;
+import ch.qos.logback.core.rolling.TimeBasedRollingPolicy;
 
 @Configuration
 @ComponentScan(basePackages={"ar.daf.foto.inspector"})
@@ -48,17 +57,24 @@ public class CoreConfig {
 		if (!file.exists()) {
 			file.mkdir();
 		}
-//		System.setProperty("dirConfig", file.toString());
 		LoggerContext loggerContext = (LoggerContext)LoggerFactory.getILoggerFactory();
 		Logger rootLogger = loggerContext.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME);
 		RollingFileAppender<ILoggingEvent> appenderFile = (RollingFileAppender<ILoggingEvent>)rootLogger.getAppender("file");
 		appenderFile.stop();
+		
+		TimeBasedRollingPolicy<?> rolling = ((TimeBasedRollingPolicy<?>)appenderFile.getRollingPolicy());
+		
 		String logFileName = appenderFile.getFile();
+		String logFileNamePattern = rolling.getFileNamePattern();
+		Integer maxHistory = env.getProperty("inspector.logFiles.maxHistory", Integer.class);
 		appenderFile.setFile(file.toString()+File.separator+logFileName);
+		rolling.setFileNamePattern(file.toString()+File.separator+logFileNamePattern);
+		rolling.setMaxHistory(maxHistory.intValue());
 		appenderFile.start();
 	}
 	
 	@Bean
+	@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 	public DataSource dataSource() throws Exception {
 		@SuppressWarnings("serial")
 		Properties dbcpProps = new Properties() {
@@ -80,6 +96,7 @@ public class CoreConfig {
 	}
 
 	@Bean
+	@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 	@Autowired
 	public LocalSessionFactoryBean sessionFactory(DataSource dataSource) {
 		@SuppressWarnings("serial")
@@ -101,6 +118,7 @@ public class CoreConfig {
 	}
 
 	@Bean
+	@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 	@Autowired
 	public HibernateTransactionManager transactionManager(
 			SessionFactory sessionFactory) {
@@ -110,11 +128,13 @@ public class CoreConfig {
 	}
 
 	@Bean
+	@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 	public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
 		return new PersistenceExceptionTranslationPostProcessor();
 	}
 	
-	@Bean 
+	@Bean
+	@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 	public SpringWebBootstrap crshBootStrap() {
 		@SuppressWarnings("serial")
 		Properties crshProps = new Properties() {
@@ -130,6 +150,37 @@ public class CoreConfig {
 		};
 		SpringWebBootstrap result = new SpringWebBootstrap();
 		result.setConfig(crshProps);
+		return result;
+	}
+	
+	@Bean
+	@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+	@Autowired
+	public MethodInvokingJobDetailFactoryBean jodDetailScanFactory(DirectoryScanner scanner) {
+		MethodInvokingJobDetailFactoryBean jobDetailFactory = new MethodInvokingJobDetailFactoryBean();
+		jobDetailFactory.setTargetObject(scanner);
+		jobDetailFactory.setTargetMethod("scan");
+		jobDetailFactory.setConcurrent(false);
+		return jobDetailFactory;
+	}
+
+	@Bean
+	@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+	@Autowired
+	public SimpleTriggerFactoryBean simpleTriggerScanFactory(JobDetail jobDetail) {
+		SimpleTriggerFactoryBean simpleTriggerFactory = new SimpleTriggerFactoryBean();
+		simpleTriggerFactory.setStartDelay(env.getProperty("inspector.scanning.delayInterval", Integer.class));
+		simpleTriggerFactory.setRepeatInterval(env.getProperty("inspector.scanning.repeatInterval", Integer.class));
+		simpleTriggerFactory.setJobDetail(jobDetail);
+		return simpleTriggerFactory;
+	}
+	
+	@Bean
+	@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+	@Autowired
+	public SchedulerFactoryBean schedulerFactory(Trigger trigger) {
+		SchedulerFactoryBean result = new SchedulerFactoryBean();
+		result.setTriggers(trigger);
 		return result;
 	}
 

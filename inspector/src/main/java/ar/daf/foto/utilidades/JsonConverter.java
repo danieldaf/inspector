@@ -15,7 +15,7 @@ public class JsonConverter {
 	static {
 		mapper = new ObjectMapper();
 		mapper.registerModule(new JodaModule());
-		//mapper.configure(com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS_TIMESTAMPS , false);
+		mapper.configure(com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS_TIMESTAMPS , false);
 	}
 	
 	public static String buildJson(Object obj) throws JsonProcessingException {

@@ -1,8 +1,13 @@
 package ar.daf.foto.inspector.file;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import ar.daf.foto.inspector.model.Imagen;
 
+@JsonIgnoreProperties(value={"id"})
 public class ImagenFile {
+	
+	private Long id=null;
 	
 	private String titulo;
 	private String descripcion;
@@ -15,6 +20,7 @@ public class ImagenFile {
 		ImagenFile result = null;
 		if (imagen != null) {
 			result = new ImagenFile();
+			result.setId(imagen.getId());
 			result.setTitulo(imagen.getTitulo());
 			result.setDescripcion(imagen.getDescripcion());
 			result.setTags(imagen.getTags());
@@ -28,6 +34,7 @@ public class ImagenFile {
 		Imagen result = null;
 		if (imagen != null) {
 			result = new Imagen();
+			result.setId(imagen.getId());
 			result.setTitulo(imagen.getTitulo());
 			result.setDescripcion(imagen.getDescripcion());
 			result.setTags(imagen.getTags());
@@ -37,6 +44,12 @@ public class ImagenFile {
 		return result;
 	}
 	
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
 	public String getTitulo() {
 		return titulo;
 	}

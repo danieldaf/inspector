@@ -10,7 +10,12 @@ import ar.daf.foto.inspector.model.Imagen;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+@JsonIgnoreProperties(value={"id", "actualizado", "actualizar", "path", "fileName"})
 public class AlbumFile {
+	
+	private Long id = null;
+	private boolean actualizado = false;
+	private boolean actualizar = false;
 	
 	private AlbumInfoFile info;
 
@@ -23,15 +28,14 @@ public class AlbumFile {
 	
 	private List<ImagenFile> imagenes;
 	
-	@JsonIgnoreProperties
 	private String path;
-	@JsonIgnoreProperties
 	private String fileName;
 	
 	public static AlbumFile fromAlbum(Album album) {
 		AlbumFile result = null;
 		if (album != null) {
 			result = new AlbumFile();
+			result.setId(album.getId());
 			result.setInfo(AlbumInfoFile.fromAlbumInfo(album.getInfo()));
 			result.setTitulo(album.getTitulo());
 			result.setDescripcion(album.getDescripcion());
@@ -56,6 +60,7 @@ public class AlbumFile {
 		Album result = null;
 		if (album != null) {
 			result = new Album();
+			result.setId(album.getId());
 			result.setInfo(AlbumInfoFile.toAlbumInfo(album.getInfo()));
 			result.setTitulo(album.getTitulo());
 			result.setDescripcion(album.getDescripcion());
@@ -75,6 +80,7 @@ public class AlbumFile {
 			if (album.getImagenes() != null && !album.getImagenes().isEmpty()) {
 				for (ImagenFile imgF : album.getImagenes()) {
 					Imagen img = ImagenFile.toImagen(imgF);
+					img.setAlbum(result);
 					result.getImagenes().add(img);
 				}
 			}
@@ -82,6 +88,24 @@ public class AlbumFile {
 		return result;
 	}
 
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
+	public boolean isActualizado() {
+		return actualizado;
+	}
+	public void setActualizado(boolean actualizado) {
+		this.actualizado = actualizado;
+	}
+	public boolean isActualizar() {
+		return actualizar;
+	}
+	public void setActualizar(boolean actualizar) {
+		this.actualizar = actualizar;
+	}
 	public String getTitulo() {
 		return titulo;
 	}

@@ -66,6 +66,7 @@ public class AlbumDto {
 			if (albumDto.getImagenes() != null && !albumDto.getImagenes().isEmpty()) {
 				for (ImagenAlbumDto imgDto : albumDto.getImagenes()) {
 					Imagen img = ImagenAlbumDto.toImagen(imgDto);
+					img.setAlbum(result);
 					result.getImagenes().add(img);
 				}
 			}

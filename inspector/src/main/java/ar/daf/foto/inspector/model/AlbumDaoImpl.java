@@ -37,19 +37,25 @@ public class AlbumDaoImpl implements AlbumDao {
 		List<Album> listaAlbumesResult = new ArrayList<Album>();
 		if (listaAlbumes != null && !listaAlbumes.isEmpty()) {
 			Session session = sessionFactory.getCurrentSession();
-			session.beginTransaction();
 			for (Album albumIn : listaAlbumes) {
 				Album albumOut = null;
 				if (albumIn.getId() != null) {
 					log.debug("Actualizando el album '"+albumIn.getFileName()+"' de id="+albumIn.getId());
 					albumOut = (Album)session.merge(albumIn);
 				} else {
-					log.debug("Creando el album '"+albumIn.getFileName()+"'");
-					session.save(albumOut);
+					Album albumDB = this.recuperarAlbum(albumIn.getPath(), albumIn.getFileName());
+					if (albumDB != null) {
+						albumIn.setId(albumDB.getId());
+						log.debug("Actualizando el album '"+albumIn.getFileName()+"' de id="+albumIn.getId());
+						albumOut = (Album)session.merge(albumIn);
+					} else {
+						log.debug("Creando el album '"+albumIn.getFileName()+"'");
+						session.save(albumIn);
+						albumOut = albumIn;
+					}
 				}
 				listaAlbumesResult.add(albumOut);
 			}
-			session.getTransaction().commit();
 		}
 		return listaAlbumesResult;
 	}
@@ -72,19 +78,39 @@ public class AlbumDaoImpl implements AlbumDao {
 		return result;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public Album recuperarAlbum(String path, String fileName) {
+		Album result = null;
+		Session session = sessionFactory.getCurrentSession();
+		Query query = session.createQuery("from Album where path=? and fileName=?");
+		query.setParameter(0, path);
+		query.setParameter(1, fileName);
+		query.setMaxResults(1);
+		List<Album> listResult = query.list();
+		if (listResult != null && !listResult.isEmpty())
+			result = listResult.get(0);
+		return result;
+	}
+
 	@Transactional(readOnly=false, propagation=Propagation.REQUIRED, isolation=Isolation.READ_UNCOMMITTED)
 	@Override
 	public Album actualizarAlbum(Album album) {
 		Session session = sessionFactory.getCurrentSession();
-		session.beginTransaction();
 		if (album.getId() != null) {
 			log.debug("Actualizando el abum '"+album.getFileName()+"' de id="+album.getId());
 			album = (Album)session.merge(album);
 		} else {
-			log.debug("Creando el abum '"+album.getFileName()+"'");
-			session.save(album);
+			Album albumDB = this.recuperarAlbum(album.getPath(), album.getFileName());
+			if (albumDB != null) {
+				album.setId(albumDB.getId());
+				log.debug("Actualizando el abum '"+album.getFileName()+"' de id="+album.getId());
+				album = (Album)session.merge(album);
+			} else {
+				log.debug("Creando el abum '"+album.getFileName()+"'");
+				session.save(album);
+			}
 		}
-		session.getTransaction().commit();
 		return album;
 	}
 	

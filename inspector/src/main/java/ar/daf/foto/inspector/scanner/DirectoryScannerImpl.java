@@ -12,7 +12,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
@@ -26,8 +28,10 @@ import org.springframework.stereotype.Service;
 
 import ar.daf.foto.inspector.file.AlbumFile;
 import ar.daf.foto.inspector.file.FileInspector;
+import ar.daf.foto.inspector.file.ImagenFile;
 import ar.daf.foto.inspector.model.Album;
 import ar.daf.foto.inspector.model.AlbumDao;
+import ar.daf.foto.inspector.model.Imagen;
 import ar.daf.foto.utilidades.JsonConverter;
 
 @Service
@@ -74,6 +78,7 @@ public class DirectoryScannerImpl implements DirectoryScanner {
 			saveConfig();
 		}
 		log.info("Configuracion inicial cargada.");
+		this.updateInspectors();
 	}
 	
 	public boolean validateConfig(ServiceConfig cfg) {
@@ -120,7 +125,7 @@ public class DirectoryScannerImpl implements DirectoryScanner {
 		ServiceConfig cfg = null;
 		try {
 			FileInputStream fis = new FileInputStream(getFullPathFileConfig());
-			log.debug("Leyendo archivo de configuracion: '"+fis.toString()+"'");
+			log.debug("Leyendo archivo de configuracion: '"+getFullPathFileConfig()+"'");
 			DataInputStream dis = new DataInputStream(fis);
 			BufferedReader br = new BufferedReader(new InputStreamReader(dis, "utf8"));
 			StringBuffer buffer = new StringBuffer();
@@ -227,6 +232,7 @@ public class DirectoryScannerImpl implements DirectoryScanner {
 		for (FileInspector inspector : tmpfi) {
 			List<AlbumFile> albumesF = inspector.inspeccionar();
 			List<Album> albumes = mergeAlbumes(albumesF);
+			inspector.actualizarIds(albumesF);
 			newAlbumes.addAll(albumes);
 		}
 		synchronized (albumes) {
@@ -238,11 +244,37 @@ public class DirectoryScannerImpl implements DirectoryScanner {
 	
 	protected List<Album> mergeAlbumes(List<AlbumFile> inAlbumes) {
 		List<Album> outAlbumes = new ArrayList<Album>();
+		Map<String, AlbumFile> inAlbumesMap = new HashMap<String, AlbumFile>();
+		Map<String, Map<String, ImagenFile>> inImagenesMap = new HashMap<String, Map<String, ImagenFile>>();
+		
 		for (AlbumFile inA : inAlbumes) {
-			Album outA = AlbumFile.toAlbum(inA);			
-			outAlbumes.add(outA);
+			if (inA.isActualizado()) {
+				Album outA = AlbumFile.toAlbum(inA);
+				outAlbumes.add(outA);
+				
+				String strKey = inA.getPath()+File.separator+inA.getFileName();
+				inAlbumesMap.put(strKey, inA);
+				Map<String, ImagenFile> inImap = new HashMap<String, ImagenFile>();
+				for (ImagenFile inI : inA.getImagenes()) {
+					inImap.put(inI.getFileName(), inI);
+				}
+				inImagenesMap.put(strKey, inImap);
+			}
 		}
 		outAlbumes = albumDao.actualizarAlbumes(outAlbumes);
+		for (Album outA : outAlbumes) {
+			String strKey = outA.getPath()+File.separator+outA.getFileName();
+			AlbumFile inA = inAlbumesMap.get(strKey);
+			if (inA != null) {
+				inA.setId(outA.getId());
+				Map<String, ImagenFile> inImap = inImagenesMap.get(strKey);
+				for (Imagen outI : outA.getImagenes()) {
+					ImagenFile inI = inImap.get(outI.getFileName());
+					inI.setId(outI.getId());
+				}
+			}
+			inA.setActualizar(true);
+		}
 		return outAlbumes;
 	}
 
