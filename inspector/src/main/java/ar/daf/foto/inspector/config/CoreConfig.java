@@ -34,6 +34,9 @@ import org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.scheduling.quartz.SimpleTriggerFactoryBean;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.joda.JodaModule;
+
 import ar.daf.foto.inspector.scanner.DirectoryScanner;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
@@ -58,6 +61,7 @@ public class CoreConfig {
 			file.mkdir();
 		}
 		LoggerContext loggerContext = (LoggerContext)LoggerFactory.getILoggerFactory();
+		
 		Logger rootLogger = loggerContext.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME);
 		RollingFileAppender<ILoggingEvent> appenderFile = (RollingFileAppender<ILoggingEvent>)rootLogger.getAppender("file");
 		appenderFile.stop();
@@ -184,4 +188,12 @@ public class CoreConfig {
 		return result;
 	}
 
+	@Bean
+	@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+	public ObjectMapper jsonMapper() {
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.registerModule(new JodaModule());
+		mapper.configure(com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS_TIMESTAMPS , false);
+		return mapper;
+	}
 }

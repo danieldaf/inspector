@@ -1,7 +1,7 @@
 <configuration>
     
     <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <!-- La configuracion final del path del archivo de log se define por codigo en la clase CoreConfig.java -->
+        <!-- La configuracion final del path del archivo de log se define por codigo en la clase CoreConfig.java -->        
         <file>albumInspector.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>albumInspector.%d{yyyy-MM-dd}.log.gz</fileNamePattern>

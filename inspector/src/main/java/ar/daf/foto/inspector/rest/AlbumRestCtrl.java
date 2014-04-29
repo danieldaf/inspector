@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@Controller
-@RequestMapping("/album")
+//@Controller
+//@RequestMapping("/album")
 public class AlbumRestCtrl {
 		
 	@RequestMapping(method={RequestMethod.GET}, value="/{param}", produces={"text/plain"})
