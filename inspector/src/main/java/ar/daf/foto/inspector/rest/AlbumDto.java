@@ -11,6 +11,7 @@ import ar.daf.foto.inspector.model.Imagen;
 
 public class AlbumDto {
 
+	private String pathBase;
 	private String fileName;
 	private String contentHash;
 	private DateTime fechaActualizacion;
@@ -27,6 +28,7 @@ public class AlbumDto {
 		AlbumDto result = null;
 		if (album != null) {
 			result = new AlbumDto();
+			result.setPathBase(album.getPathBase());
 			result.setFileName(album.getFileName());
 			result.setContentHash(album.getInfo().getContentHash());
 			result.setFechaActualizacion(album.getInfo().getFechaActualizacion());
@@ -47,24 +49,25 @@ public class AlbumDto {
 		return result;
 	}
 	
-	public static Album toAlbum(AlbumDto albumDto) {
+	public static Album toAlbum(AlbumDto album) {
 		Album result = null;
-		if (albumDto != null) {
+		if (album != null) {
 			result = new Album();
-			result.setFileName(albumDto.getFileName());
+			result.setPathBase(album.getPathBase());
+			result.setFileName(album.getFileName());
 			AlbumInfo info = new AlbumInfo();
-			info.setContentHash(albumDto.getContentHash());
-			info.setFechaActualizacion(albumDto.getFechaActualizacion());
+			info.setContentHash(album.getContentHash());
+			info.setFechaActualizacion(album.getFechaActualizacion());
 			result.setInfo(info);
-			result.setTitulo(albumDto.getTitulo());
-			result.setDescripcion(albumDto.getDescripcion());
-			result.setTags(albumDto.getTags());
-			result.setFecha(albumDto.getFecha());
-			result.setUbicacion(UbicacionDto.toUbicacion(albumDto.getUbicacion()));
+			result.setTitulo(album.getTitulo());
+			result.setDescripcion(album.getDescripcion());
+			result.setTags(album.getTags());
+			result.setFecha(album.getFecha());
+			result.setUbicacion(UbicacionDto.toUbicacion(album.getUbicacion()));
 //			result.setImagenPortada(ImagenAlbumDto.toImagen(albumDto.getImagenPortada()));
 			result.setImagenes(new ArrayList<Imagen>());
-			if (albumDto.getImagenes() != null && !albumDto.getImagenes().isEmpty()) {
-				for (ImagenAlbumDto imgDto : albumDto.getImagenes()) {
+			if (album.getImagenes() != null && !album.getImagenes().isEmpty()) {
+				for (ImagenAlbumDto imgDto : album.getImagenes()) {
 					Imagen img = ImagenAlbumDto.toImagen(imgDto);
 					img.setAlbum(result);
 					result.getImagenes().add(img);
@@ -122,6 +125,14 @@ public class AlbumDto {
 		this.ubicacion = ubicacion;
 	}
 
+	public String getPathBase() {
+		return pathBase;
+	}
+	
+	public void setPathBase(String pathBase) {
+		this.pathBase = pathBase;
+	}
+	
 	public String getFileName() {
 		return fileName;
 	}

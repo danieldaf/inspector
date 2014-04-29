@@ -10,7 +10,7 @@ import ar.daf.foto.inspector.model.Imagen;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-@JsonIgnoreProperties(value={"id", "actualizado", "actualizar", "path", "fileName"})
+@JsonIgnoreProperties(value={"id", "actualizado", "actualizar", "pathBase", "path", "fileName"})
 public class AlbumFile {
 	
 	private Long id = null;
@@ -28,6 +28,7 @@ public class AlbumFile {
 	
 	private List<ImagenFile> imagenes;
 	
+	private String pathBase;
 	private String path;
 	private String fileName;
 	
@@ -43,6 +44,7 @@ public class AlbumFile {
 			result.setFecha(album.getFecha());
 			result.setUbicacion(UbicacionFile.fromUbicacion(album.getUbicacion()));
 			result.setImagenPortada(album.getImagenPortada()!=null?album.getImagenPortada().getFileName():null);
+			result.setPathBase(album.getPathBase());
 			result.setPath(album.getPath());
 			result.setFileName(album.getFileName());
 			result.setImagenes(new ArrayList<ImagenFile>());
@@ -74,6 +76,7 @@ public class AlbumFile {
 			} else {
 				result.setImagenPortada(null);
 			}
+			result.setPathBase(album.getPathBase());
 			result.setPath(album.getPath());
 			result.setFileName(album.getFileName());
 			result.setImagenes(new ArrayList<Imagen>());
@@ -123,6 +126,12 @@ public class AlbumFile {
 	}
 	public void setTags(String tags) {
 		this.tags = tags;
+	}
+	public String getPathBase() {
+		return pathBase;
+	}
+	public void setPathBase(String pathBase) {
+		this.pathBase = pathBase;
 	}
 	public String getPath() {
 		return path;

@@ -52,7 +52,6 @@ public class DirectoryScannerImpl implements DirectoryScanner {
 	private AlbumDao albumDao;
 	
 	protected List<FileInspector> inspectores = new ArrayList<FileInspector>();
-	protected List<Album> albumes = new ArrayList<Album>();
 	
 	@PostConstruct
 	public void onPostStringConfigure() {
@@ -228,31 +227,27 @@ public class DirectoryScannerImpl implements DirectoryScanner {
 		synchronized (inspectores) {
 			tmpfi.addAll(inspectores);
 		}
-		List<Album> newAlbumes = new ArrayList<Album>();
 		for (FileInspector inspector : tmpfi) {
 			List<AlbumFile> albumesF = inspector.inspeccionar();
-			List<Album> albumes = mergeAlbumes(albumesF);
+			mergeAlbumes(albumesF);
 			inspector.actualizarIds(albumesF);
-			newAlbumes.addAll(albumes);
-		}
-		synchronized (albumes) {
-			albumes.clear();
-			albumes.addAll(newAlbumes);
 		}
 		log.info("Albumes actualizados.");
 	}
 	
-	protected List<Album> mergeAlbumes(List<AlbumFile> inAlbumes) {
+	protected void mergeAlbumes(List<AlbumFile> inAlbumes) {
 		List<Album> outAlbumes = new ArrayList<Album>();
 		Map<String, AlbumFile> inAlbumesMap = new HashMap<String, AlbumFile>();
 		Map<String, Map<String, ImagenFile>> inImagenesMap = new HashMap<String, Map<String, ImagenFile>>();
 		
 		for (AlbumFile inA : inAlbumes) {
+			Album outA = AlbumFile.toAlbum(inA);
 			if (inA.isActualizado()) {
-				Album outA = AlbumFile.toAlbum(inA);
 				outAlbumes.add(outA);
 				
-				String strKey = inA.getPath()+File.separator+inA.getFileName();
+				String strKey = inA.getPathBase()+File.separator+inA.getPath()+File.separator+inA.getFileName();
+				if (inA.getPath().isEmpty())
+					strKey = inA.getPathBase()+File.separator+inA.getFileName();
 				inAlbumesMap.put(strKey, inA);
 				Map<String, ImagenFile> inImap = new HashMap<String, ImagenFile>();
 				for (ImagenFile inI : inA.getImagenes()) {
@@ -261,21 +256,24 @@ public class DirectoryScannerImpl implements DirectoryScanner {
 				inImagenesMap.put(strKey, inImap);
 			}
 		}
-		outAlbumes = albumDao.actualizarAlbumes(outAlbumes);
-		for (Album outA : outAlbumes) {
-			String strKey = outA.getPath()+File.separator+outA.getFileName();
-			AlbumFile inA = inAlbumesMap.get(strKey);
-			if (inA != null) {
-				inA.setId(outA.getId());
-				Map<String, ImagenFile> inImap = inImagenesMap.get(strKey);
-				for (Imagen outI : outA.getImagenes()) {
-					ImagenFile inI = inImap.get(outI.getFileName());
-					inI.setId(outI.getId());
+		if (!outAlbumes.isEmpty()) {
+			outAlbumes = albumDao.actualizarAlbumes(outAlbumes);
+			for (Album outA : outAlbumes) {
+				String strKey = outA.getPathBase()+File.separator+outA.getPath()+File.separator+outA.getFileName();
+				if (outA.getPath().isEmpty())
+					strKey = outA.getPathBase()+File.separator+outA.getFileName();
+				AlbumFile inA = inAlbumesMap.get(strKey);
+				if (inA != null) {
+					inA.setId(outA.getId());
+					Map<String, ImagenFile> inImap = inImagenesMap.get(strKey);
+					for (Imagen outI : outA.getImagenes()) {
+						ImagenFile inI = inImap.get(outI.getFileName());
+						inI.setId(outI.getId());
+					}
+					inA.setActualizar(true);
 				}
 			}
-			inA.setActualizar(true);
 		}
-		return outAlbumes;
 	}
 
 }

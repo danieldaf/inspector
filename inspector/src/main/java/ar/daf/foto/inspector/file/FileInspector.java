@@ -118,7 +118,12 @@ public class FileInspector {
 			}
 			br.close();
 			result = JsonConverter.buildObject(AlbumFile.class, buffer.toString());
-			result.setPath(dbTxt.getParentFile().getParent());
+			result.setPathBase(this.pathBase);
+			result.setPath(dbTxt.getParentFile().getParent().substring(this.pathBase.length()));
+			if (result.getPath().endsWith("/"))
+				result.setPath(result.getPath().substring(0, result.getPath().length()-1));
+			if (result.getPath().startsWith("/"))
+				result.setPath(result.getPath().substring(1));
 			result.setFileName(dbTxt.getParentFile().getName());
 		} catch (FileNotFoundException e) {
 			logError(dbTxt.getParentFile(), e.getMessage());
@@ -144,7 +149,7 @@ public class FileInspector {
 	protected boolean haceFaltaRearmarElAlbum(AlbumFile album, File directorio, File archivosImagenes[]) throws NoSuchAlgorithmException, JsonProcessingException {
 		boolean result = false;
 		logDebug(directorio, "Verificando la vigencia de los datos en memoria del album.");
-		if (album != null && album.getPath() != null && album.getFileName() != null) {
+		if (album != null && album.getPathBase() != null && album.getPath() != null && album.getFileName() != null) {
 			if (album.getInfo() == null) {
 				result = true;
 				logWarn(directorio, "Los datos del album cargado no tiene header info. Se requiere rearmar e album.");
@@ -195,7 +200,10 @@ public class FileInspector {
 	
 	public AlbumFile actualizarAlbum(AlbumFile album) {
 		if (album != null) {
-			File directorio = new File(album.getPath());
+			String fullPath = album.getPathBase()+File.separator+album.getPath();
+			if (album.getPath().isEmpty())
+				fullPath = album.getPathBase(); //TODO tal bes inspeccionar el album raiz desde este metodo deberia estar prohibido...
+			File directorio = new File(fullPath);
 			if (directorio != null && directorio.exists() && directorio.isDirectory() && directorio.canRead() && directorio.canExecute()) {
 				File archivosImagenes[] = directorio.listFiles(fileImageFilter);
 				try {
@@ -273,7 +281,12 @@ public class FileInspector {
 		result.setUbicacion(null);
 		result.setTags(null);
 		result.setFecha(null);
-		result.setPath(directorio.getParent());
+		result.setPathBase(this.pathBase);
+		result.setPath(directorio.getParent().substring(this.pathBase.length()));
+		if (result.getPath().endsWith("/"))
+			result.setPath(result.getPath().substring(0, result.getPath().length()-1));
+		if (result.getPath().startsWith("/"))
+			result.setPath(result.getPath().substring(1));
 		result.setFileName(directorio.getName());
 		result.setImagenes(new ArrayList<ImagenFile>());
 		
@@ -445,9 +458,12 @@ public class FileInspector {
 					}
 					
 					if (completarConId) {
-						AlbumId albumId = albumesIdTmp.get(album.getPath()+File.separator+album.getFileName());
+						String albumKey = album.getPathBase()+File.separator+album.getPath()+File.separator+album.getFileName();
+						if (album.getPath().isEmpty())
+							albumKey = album.getPathBase()+File.separator+album.getFileName();
+						AlbumId albumId = albumesIdTmp.get(albumKey);
 						if (albumId != null) {
-							albumesId.put(album.getPath()+File.separator+album.getFileName(), albumId);
+							albumesId.put(albumKey, albumId);
 							album.setId(albumId.id);
 						}
 					}
@@ -479,8 +495,11 @@ public class FileInspector {
 	public synchronized void actualizarIds(List<AlbumFile> albumes) {
 		for (AlbumFile album : albumes) {
 			if (album.isActualizar()) {
+				String albumKey = album.getPathBase()+File.separator+album.getPath()+File.separator+album.getFileName();
+				if (album.getPath().isEmpty())
+					albumKey = album.getPathBase()+File.separator+album.getFileName();
 				if (album.getId() != null) {
-					String strKey = album.getPath()+File.separator+album.getFileName();
+					String strKey = albumKey;
 					AlbumId albumId = this.albumesId.get(strKey);
 					if (albumId == null)
 						albumId = new AlbumId();
@@ -491,12 +510,12 @@ public class FileInspector {
 						if (imagen.getId() != null) {
 							albumId.imgsId.put(imagen.getFileName(), imagen.getId());
 						} else {
-							logError(null, "Internal: La imagen '"+imagen.getFileName()+"' del album '"+album.getPath()+File.separator+album.getFileName()+"' esta marcado para actualizar su id pero no tiene ninguno asignado.");
+							logError(null, "Internal: La imagen '"+imagen.getFileName()+"' del album '"+albumKey+"' esta marcado para actualizar su id pero no tiene ninguno asignado.");
 						}
 					}
 					this.albumesId.put(strKey, albumId);
 				} else {
-					logError(null, "Internal: El album '"+album.getPath()+File.separator+album.getFileName()+"' esta marcado para actualizar su id pero no tiene ninguno asignado.");
+					logError(null, "Internal: El album '"+albumKey+"' esta marcado para actualizar su id pero no tiene ninguno asignado.");
 				}
 			}
 		}

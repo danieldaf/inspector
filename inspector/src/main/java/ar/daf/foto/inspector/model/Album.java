@@ -58,6 +58,10 @@ public class Album {
 	@NotNull
 	private List<Imagen> imagenes;
 	
+	@Column(name="PATH_BASE")
+	@NotNull
+	@Length(min=0, max=1024)
+	private String pathBase;
 	@Column(name="PATH")
 	@NotNull
 	@Length(min=0, max=1024)
@@ -84,6 +88,12 @@ public class Album {
 	}
 	public void setTags(String tags) {
 		this.tags = tags;
+	}
+	public String getPathBase() {
+		return pathBase;
+	}
+	public void setPathBase(String pathBase) {
+		this.pathBase = pathBase;
 	}
 	public String getPath() {
 		return path;
