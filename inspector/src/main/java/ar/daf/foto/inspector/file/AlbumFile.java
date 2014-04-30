@@ -80,13 +80,18 @@ public class AlbumFile {
 			result.setPath(album.getPath());
 			result.setFileName(album.getFileName());
 			result.setImagenes(new ArrayList<Imagen>());
+			Imagen imagenPortada = null;
 			if (album.getImagenes() != null && !album.getImagenes().isEmpty()) {
 				for (ImagenFile imgF : album.getImagenes()) {
 					Imagen img = ImagenFile.toImagen(imgF);
 					img.setAlbum(result);
 					result.getImagenes().add(img);
+					
+					if (img.getFileName().equals(album.getImagenPortada()))
+							imagenPortada = img;
 				}
 			}
+			result.setImagenPortada(imagenPortada);
 		}
 		return result;
 	}

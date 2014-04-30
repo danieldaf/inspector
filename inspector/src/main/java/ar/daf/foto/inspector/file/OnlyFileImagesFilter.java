@@ -19,9 +19,9 @@ public class OnlyFileImagesFilter implements FileFilter {
 			boolean noImagen = true;
 			for (int pos=0; pos<extensions.length && noImagen; pos++) {
 				if (name.endsWith(extensions[pos]))
-						noImagen = false;
+					noImagen = false;
 			}
-			result = noImagen;
+			result = !noImagen;
 		}
 		return result;
 	}

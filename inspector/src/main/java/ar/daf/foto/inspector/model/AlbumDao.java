@@ -10,4 +10,6 @@ public interface AlbumDao {
 	Album recuperarAlbum(Long id);
 	Album recuperarAlbum(String path, String fileName);
 	Album actualizarAlbum(Album album);
+	
+	Imagen recuperarImagen(String path, String fileNameAlbum, String fileNameImagen);
 }

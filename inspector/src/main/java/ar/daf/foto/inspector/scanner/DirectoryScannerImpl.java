@@ -205,7 +205,7 @@ public class DirectoryScannerImpl implements DirectoryScanner {
 			prevInspectores.addAll(inspectores);
 		}
 		for (String path : config.getPaths()) {
-			FileInspector inspector = new FileInspector(path);
+			FileInspector inspector = new FileInspector(path, config.getDbTextFileName(), config.getDbFileEncoding(), config.getExtensiones());
 			if (prevInspectores.contains(inspector)) {
 				inspector = prevInspectores.get(prevInspectores.indexOf(inspector));
 				log.debug("Reusando el inspector para el directorio: '"+path+"'");

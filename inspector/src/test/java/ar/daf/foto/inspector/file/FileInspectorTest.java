@@ -8,6 +8,8 @@ import java.io.OutputStreamWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.joda.time.DateTime;
@@ -73,7 +75,10 @@ public class FileInspectorTest {
 		fotoVacacion10_02.createNewFile();
 		fotoVacacion10_03.createNewFile();
 		
-		inspector = new FileInspector(pathBase.toString());
+		String dbTextFileName = ".infoAlbum.json.txt";
+		String dbFileEncoding = "utf8";
+		String extensiones[] = {"JPEG", "JPG", "PNG", "GIF", "BMP"};
+		inspector = new FileInspector(pathBase.toString(), dbTextFileName, dbFileEncoding, Arrays.asList(extensiones));
 	}
 
 	@AfterTest

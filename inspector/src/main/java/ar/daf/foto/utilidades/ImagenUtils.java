@@ -1,21 +1,31 @@
 package ar.daf.foto.utilidades;
 
-import java.io.File;
-import java.security.NoSuchAlgorithmException;
-
 import ar.daf.foto.inspector.model.Imagen;
+
+import com.github.fge.uritemplate.URITemplate;
+import com.github.fge.uritemplate.URITemplateException;
+import com.github.fge.uritemplate.URITemplateParseException;
+import com.github.fge.uritemplate.vars.VariableMap;
+import com.github.fge.uritemplate.vars.VariableMapBuilder;
 
 public class ImagenUtils {
 	
 	public static String armarUrl(Imagen imagen) {
 		String result = null;
 		if (imagen != null) {
-			//TODO: revisar y mejorar con UriTemplates
-			//usar path y fileName como identificador
+			VariableMapBuilder builder = VariableMap.newBuilder();
+			builder.addScalarValue("fileNameImagen", imagen.getFileName());
+			builder.addScalarValue("fileNameAlbum", imagen.getAlbum().getFileName());
+			if (imagen.getAlbum().getPath() != null && !imagen.getAlbum().getPath().isEmpty())
+				builder.addScalarValue("path", imagen.getAlbum().getPath());
+			VariableMap vars = builder.freeze();
+			URITemplate uriT;
 			try {
-				String hash = HashUtils.getHash(imagen.getAlbum().getPath()+File.separator+imagen.getAlbum().getFileName()+File.separator+imagen.getFileName());
-				result = "/imagen_"+hash+"_"+imagen.getFileName();
-			} catch (NoSuchAlgorithmException e) {
+				uriT = new URITemplate("/consultas/album{/path}/{fileNameAlbum}/{fileNameImagen}");
+				result = uriT.toString(vars);
+			} catch (URITemplateParseException e) {
+				e.printStackTrace();
+			} catch (URITemplateException e) {
 				e.printStackTrace();
 			}
 		}
@@ -25,12 +35,19 @@ public class ImagenUtils {
 	public static String armarUrlMiniatura(Imagen imagen) {
 		String result = null;
 		if (imagen != null) {
-			//TODO: revisar y mejorar con UriTemplates
-			//usar path y fileName como identificador
+			VariableMapBuilder builder = VariableMap.newBuilder();
+			builder.addScalarValue("fileNameImagen", imagen.getFileName());
+			builder.addScalarValue("fileNameAlbum", imagen.getAlbum().getFileName());
+			if (imagen.getAlbum().getPath() != null && !imagen.getAlbum().getPath().isEmpty())
+				builder.addScalarValue("path", imagen.getAlbum().getPath());
+			VariableMap vars = builder.freeze();
+			URITemplate uriT;
 			try {
-				String hash = HashUtils.getHash(imagen.getAlbum().getPath()+File.separator+imagen.getAlbum().getFileName()+File.separator+imagen.getFileName());
-				result = "/imagen_mini_"+hash+"_"+imagen.getFileName();
-			} catch (NoSuchAlgorithmException e) {
+				uriT = new URITemplate("/consultas/album{/path}/{fileNameAlbum}/miniatura/{fileNameImagen}");
+				result = uriT.toString(vars);
+			} catch (URITemplateParseException e) {
+				e.printStackTrace();
+			} catch (URITemplateException e) {
 				e.printStackTrace();
 			}
 		}

@@ -47,7 +47,7 @@ public class FileInspector {
 	
 	private String dbTextFileName = ".infoAlbum.json.txt";
 	private String dbFileEncoding = "utf8";
-	private String extensiones[] = {"JPEG, JPG, PNG, GIF, BMP"};
+	private String extensiones[] = {"JPEG", "JPG", "PNG", "GIF", "BMP"};
 	
 	private FileFilter fileImageFilter;
 	private FileFilter directoryFilter;
@@ -64,8 +64,12 @@ public class FileInspector {
 		Map<String, Long> imgsId = new HashMap<String, Long>();
 	}
 	
-	public FileInspector(String pathBase) {
+	public FileInspector(String pathBase, String dbTextFileName, String dbFileEncoding, List<String> extensiones) {
 		this.pathBase = pathBase;
+		this.dbTextFileName = dbTextFileName;
+		this.dbFileEncoding = dbFileEncoding;
+		if (extensiones != null)
+			this.extensiones = extensiones.toArray(this.extensiones);
 		this.fileDataBaseTextFilter = new FileDataBaseTextFilter(this.dbTextFileName);
 		this.fileImageFilter = new OnlyFileImagesFilter(this.extensiones);
 		this.directoryFilter = new OnlyDirectoryFilter();
@@ -308,6 +312,8 @@ public class FileInspector {
 			}
 			
 			result.getImagenes().add(imagen);
+			if (result.getImagenPortada() == null) 
+				result.setImagenPortada(imagen.getFileName());
 		}
 		result.setFecha(firstDate);
 		

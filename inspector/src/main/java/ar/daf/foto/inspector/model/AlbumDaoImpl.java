@@ -83,9 +83,9 @@ public class AlbumDaoImpl implements AlbumDao {
 	public Album recuperarAlbum(String path, String fileName) {
 		Album result = null;
 		Session session = sessionFactory.getCurrentSession();
-		Query query = session.createQuery("from Album where path=? and fileName=?");
-		query.setParameter(0, path);
-		query.setParameter(1, fileName);
+		Query query = session.createQuery("from Album where path=:path and fileName=:fileName");
+		query.setParameter("path", path);
+		query.setParameter("fileName", fileName);
 		query.setMaxResults(1);
 		List<Album> listResult = query.list();
 		if (listResult != null && !listResult.isEmpty())
@@ -112,6 +112,22 @@ public class AlbumDaoImpl implements AlbumDao {
 			}
 		}
 		return album;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public Imagen recuperarImagen(String path, String fileNameAlbum, String fileNameImagen) {
+		Session session = sessionFactory.getCurrentSession();
+		Query query = session.createQuery("from Imagen where fileName=:fileNameImagen and album.path=:path and album.fileName=:fileNameAlbum");
+		query.setParameter("path", path);
+		query.setParameter("fileNameAlbum", fileNameAlbum);
+		query.setParameter("fileNameImagen", fileNameImagen);
+		query.setMaxResults(1);
+		List<Imagen> listResult = query.list();
+		Imagen imagen = null;
+		if (listResult != null && !listResult.isEmpty())
+			imagen = listResult.get(0);
+		return imagen;
 	}
 	
 }
