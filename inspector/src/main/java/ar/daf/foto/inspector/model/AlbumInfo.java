@@ -28,6 +28,11 @@ public class AlbumInfo {
 	@Min(0)
 	private int versionRevision;
 	
+	@Column(name="HASH_ID")
+	@NotNull
+	@Length(min=0, max=128)
+	private String hashId;
+	
 	/**
 	 * Este campo contiene la fecha de actualizacion de la carpeta que contiene el album.
 	 * Se empla para determinar con rapidez si es necesario o no actualizar el album.
@@ -42,7 +47,13 @@ public class AlbumInfo {
 	@Column(name="CONTENT_HASH")
 	@Length(min=0, max=128)
 	private String contentHash;
-
+	
+	public String getHashId() {
+		return hashId;
+	}
+	public void setHashId(String hashId) {
+		this.hashId = hashId;
+	}
 	public DateTime getFechaActualizacion() {
 		return fechaActualizacion;
 	}

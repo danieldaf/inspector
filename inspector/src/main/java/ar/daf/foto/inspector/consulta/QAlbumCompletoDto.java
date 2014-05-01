@@ -3,10 +3,12 @@ package ar.daf.foto.inspector.consulta;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.hateoas.ResourceSupport;
+
 import ar.daf.foto.inspector.model.Album;
 import ar.daf.foto.inspector.model.Imagen;
 
-public class QAlbumCompletoDto {
+public class QAlbumCompletoDto extends ResourceSupport {
 
 	private QAlbumInfoDto info;
 	private List<QImagenDto> imagenes;

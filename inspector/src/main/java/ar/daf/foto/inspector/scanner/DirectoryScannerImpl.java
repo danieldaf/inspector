@@ -245,9 +245,7 @@ public class DirectoryScannerImpl implements DirectoryScanner {
 			if (inA.isActualizado()) {
 				outAlbumes.add(outA);
 				
-				String strKey = inA.getPathBase()+File.separator+inA.getPath()+File.separator+inA.getFileName();
-				if (inA.getPath().isEmpty())
-					strKey = inA.getPathBase()+File.separator+inA.getFileName();
+				String strKey = inA.getInfo().getHashId();
 				inAlbumesMap.put(strKey, inA);
 				Map<String, ImagenFile> inImap = new HashMap<String, ImagenFile>();
 				for (ImagenFile inI : inA.getImagenes()) {
@@ -259,9 +257,7 @@ public class DirectoryScannerImpl implements DirectoryScanner {
 		if (!outAlbumes.isEmpty()) {
 			outAlbumes = albumDao.actualizarAlbumes(outAlbumes);
 			for (Album outA : outAlbumes) {
-				String strKey = outA.getPathBase()+File.separator+outA.getPath()+File.separator+outA.getFileName();
-				if (outA.getPath().isEmpty())
-					strKey = outA.getPathBase()+File.separator+outA.getFileName();
+				String strKey = outA.getInfo().getHashId();
 				AlbumFile inA = inAlbumesMap.get(strKey);
 				if (inA != null) {
 					inA.setId(outA.getId());

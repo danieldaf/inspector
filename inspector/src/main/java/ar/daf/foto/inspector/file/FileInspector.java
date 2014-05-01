@@ -175,22 +175,29 @@ public class FileInspector {
 								result = true;
 								logDebug(directorio, "El hash del contenido del archivo no coincide con su contenido. Se requiere rearmar el album.");
 							} else {
-								//4.- Revisamos los archivos imagenes son distintos
-								ArrayList<String> imagenes = new ArrayList<String>();
-								for (File archivo : archivosImagenes) {
-									String nombre = archivo.getName();
-									int posImg = Collections.binarySearch(imagenes, nombre, fileImageComparator);
-									if (posImg < 0) {
-										imagenes.add(-posImg-1, nombre);
+								//4.- Revisamos si el album fue movido de lugar
+								String hashId = HashUtils.getHash(album.getPath()+File.separator+album.getFileName());
+								if (!hashId.equals(album.getInfo().getHashId())) {
+									result = true;
+									logDebug(directorio, "Aparentemente el album fue movido de carpeta. El hashId almacenado no coincide. Se requiere rearmar el album.");
+								} else {
+									//5.- Revisamos los archivos imagenes son distintos
+									ArrayList<String> imagenes = new ArrayList<String>();
+									for (File archivo : archivosImagenes) {
+										String nombre = archivo.getName();
+										int posImg = Collections.binarySearch(imagenes, nombre, fileImageComparator);
+										if (posImg < 0) {
+											imagenes.add(-posImg-1, nombre);
+										}
 									}
-								}
-								for (ImagenFile img : album.getImagenes()) {
-									String nombre = img.getFileName();
-									int posImg = Collections.binarySearch(imagenes, nombre, fileImageComparator);
-									if (posImg < 0) {
-										result = true;
-										logDebug(directorio, "Las imagenes, por su nombre de archivo, no coinciden con las listadas en el archivo. Se requiere rearmar el album.");
-										break;
+									for (ImagenFile img : album.getImagenes()) {
+										String nombre = img.getFileName();
+										int posImg = Collections.binarySearch(imagenes, nombre, fileImageComparator);
+										if (posImg < 0) {
+											result = true;
+											logDebug(directorio, "Las imagenes, por su nombre de archivo, no coinciden con las listadas en el archivo. Se requiere rearmar el album.");
+											break;
+										}
 									}
 								}
 							}
@@ -206,7 +213,7 @@ public class FileInspector {
 		if (album != null) {
 			String fullPath = album.getPathBase()+File.separator+album.getPath();
 			if (album.getPath().isEmpty())
-				fullPath = album.getPathBase(); //TODO tal bes inspeccionar el album raiz desde este metodo deberia estar prohibido...
+				fullPath = album.getPathBase(); //TODO tal vez, inspeccionar el album raiz desde este metodo deberia estar prohibido...
 			File directorio = new File(fullPath);
 			if (directorio != null && directorio.exists() && directorio.isDirectory() && directorio.canRead() && directorio.canExecute()) {
 				File archivosImagenes[] = directorio.listFiles(fileImageFilter);
@@ -226,10 +233,17 @@ public class FileInspector {
 		/*
 		 * El album a actualizar fue cargado desde el archivo de disco.
 		 * Por lo tanto todas sus descripciones son correctas en memoria.
+		 * 
 		 * Si se cambiaron a mano, en forma externa hay que actualizar la fecha y el hash correspondiente.
+		 * 
+		 * El album pudo haberse modivo de carpeta, en cuyo caso hay que recalcular su hashId.
+		 * 
 		 * Otra cosa que pudo haber cambiado sino son las imagenes, los nombres y la cantidad.
 		 * Eso hay que revisarlo.
 		 */
+		String hashId = HashUtils.getHash(album.getPath()+File.separator+album.getFileName());
+		album.getInfo().setHashId(hashId);
+		
 		List<ImagenFile> imagenes = new ArrayList<ImagenFile>();
 		for (File archivo : archivosImagenes) {
 			ImagenFile imagenPrev = null;
@@ -270,8 +284,10 @@ public class FileInspector {
 		return album;
 	}
 	
-	protected AlbumFile construirAlbum(File directorio, File archivosImagenes[], boolean completarConId, AlbumId albumId) throws NoSuchAlgorithmException, JsonProcessingException {
+	protected AlbumFile construirAlbum(File directorio, File archivosImagenes[]) throws NoSuchAlgorithmException, JsonProcessingException {
+		
 		AlbumFile result = new AlbumFile();
+
 		AlbumInfoFile info = new AlbumInfoFile();
 		info.setVersionMayor(albumVersionMayor);
 		info.setVersionMenor(albumVersionMenor);
@@ -294,6 +310,10 @@ public class FileInspector {
 		result.setFileName(directorio.getName());
 		result.setImagenes(new ArrayList<ImagenFile>());
 		
+		String hashId = result.getPath()+File.separator+result.getFileName();
+		hashId = HashUtils.getHash(hashId);
+		info.setHashId(hashId);
+
 		DateTime firstDate = null;
 		for (File archivoImagen : archivosImagenes) {
 			ImagenFile imagen = new ImagenFile();
@@ -304,11 +324,6 @@ public class FileInspector {
 			imagen.setFileNameSmall(null);
 			if (firstDate == null || firstDate.isAfter(archivoImagen.lastModified())) {
 				firstDate = new DateTime(archivoImagen.lastModified());
-			}
-			
-			if (completarConId) {
-				imagen.setId(albumId.imgsId.get(imagen.getFileName()));
-				albumId.imgsId.put(imagen.getFileName(), imagen.getId());
 			}
 			
 			result.getImagenes().add(imagen);
@@ -372,6 +387,9 @@ public class FileInspector {
 			File archivosImagenes[] = directorio.listFiles(fileImageFilter);
 			if (archivosImagenes != null && archivosImagenes.length > 0) {
 				AlbumFile album = null;
+				AlbumId albumId = null;
+				String prevHashId = null;
+				
 				if (archivosDBTxt.length == 1) {
 					logDebug(directorio, "Archivo de datos del album encontrado.");
 					//1.- cargar album desde db
@@ -398,14 +416,22 @@ public class FileInspector {
 						//2.- verificar si el hay que actualizar
 						boolean sinVigencia = haceFaltaRearmarElAlbum(album, directorio, archivosImagenes);
 
-						AlbumId albumId = null;
 						if (completarConId) {
-							albumId = albumesIdTmp.get(directorio.getAbsolutePath());
+							if (album.getInfo() != null) {
+								prevHashId = album.getInfo().getHashId();
+								if (prevHashId != null) {
+									prevHashId = prevHashId.trim();
+									if (prevHashId.isEmpty())
+										prevHashId = null;
+								}
+							}
+							if (prevHashId != null)
+								albumId = albumesIdTmp.get(prevHashId);
+							
 							if (albumId == null) {
 								albumId = new AlbumId();
 								albumId.id = album.getId();
 								albumId.imgsId = new HashMap<String, Long>();
-								albumesIdTmp.put(directorio.getAbsolutePath(), albumId);
 							} else {
 								album.setId(albumId.id);
 							}
@@ -437,21 +463,26 @@ public class FileInspector {
 					}
 				} else {
 					//construir desde disco					
-					AlbumId albumId = null;
+					logDebug(directorio, "Archivo del album no encontrado. Construyendolo.");
+					album = construirAlbum(directorio, archivosImagenes);
+					album.setActualizado(true);
+					
 					if (completarConId) {
-						albumId = albumesIdTmp.get(directorio.getAbsolutePath());
+						albumId = albumesIdTmp.get(album.getInfo().getHashId());
 						if (albumId == null) {
 							albumId = new AlbumId();
-							albumId.id = null;
+							albumId.id = album.getId();
 							albumId.imgsId = new HashMap<String, Long>();
-							albumesIdTmp.put(directorio.getAbsolutePath(), albumId);
+							for (ImagenFile imgF : album.getImagenes()) {
+								albumId.imgsId.put(imgF.getFileName(), imgF.getId());
+							}
+						} else {
+							for (ImagenFile imgF : album.getImagenes()) {
+								imgF.setId(albumId.imgsId.get(imgF.getFileName()));
+								albumId.imgsId.put(imgF.getFileName(), imgF.getId());
+							}
 						}
 					}
-
-					logDebug(directorio, "Archivo del album no encontrado. Construyendolo.");
-					album = construirAlbum(directorio, archivosImagenes, completarConId, albumId);
-					album.setActualizado(true);
-
 				}
 				
 				//persistir album
@@ -464,14 +495,11 @@ public class FileInspector {
 					}
 					
 					if (completarConId) {
-						String albumKey = album.getPathBase()+File.separator+album.getPath()+File.separator+album.getFileName();
-						if (album.getPath().isEmpty())
-							albumKey = album.getPathBase()+File.separator+album.getFileName();
-						AlbumId albumId = albumesIdTmp.get(albumKey);
-						if (albumId != null) {
-							albumesId.put(albumKey, albumId);
-							album.setId(albumId.id);
+						String albumKey = album.getInfo().getHashId();
+						if (prevHashId != null) {
+							albumesIdTmp.remove(prevHashId);
 						}
+						albumesId.put(albumKey, albumId);
 					}
 					
 					result.add(album);
@@ -501,12 +529,9 @@ public class FileInspector {
 	public synchronized void actualizarIds(List<AlbumFile> albumes) {
 		for (AlbumFile album : albumes) {
 			if (album.isActualizar()) {
-				String albumKey = album.getPathBase()+File.separator+album.getPath()+File.separator+album.getFileName();
-				if (album.getPath().isEmpty())
-					albumKey = album.getPathBase()+File.separator+album.getFileName();
+				String albumKey = album.getInfo().getHashId();
 				if (album.getId() != null) {
-					String strKey = albumKey;
-					AlbumId albumId = this.albumesId.get(strKey);
+					AlbumId albumId = this.albumesId.get(albumKey);
 					if (albumId == null)
 						albumId = new AlbumId();
 					albumId.id = album.getId();
@@ -519,7 +544,7 @@ public class FileInspector {
 							logError(null, "Internal: La imagen '"+imagen.getFileName()+"' del album '"+albumKey+"' esta marcado para actualizar su id pero no tiene ninguno asignado.");
 						}
 					}
-					this.albumesId.put(strKey, albumId);
+					this.albumesId.put(albumKey, albumId);
 				} else {
 					logError(null, "Internal: El album '"+albumKey+"' esta marcado para actualizar su id pero no tiene ninguno asignado.");
 				}

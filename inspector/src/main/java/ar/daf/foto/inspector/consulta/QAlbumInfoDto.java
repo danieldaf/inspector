@@ -1,22 +1,26 @@
 package ar.daf.foto.inspector.consulta;
 
 import org.joda.time.DateTime;
+import org.springframework.hateoas.ResourceSupport;
 
 import ar.daf.foto.inspector.model.Album;
-import ar.daf.foto.utilidades.ImagenUtils;
 
-public class QAlbumInfoDto {
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties({"fileNameImagenPortada"})
+public class QAlbumInfoDto extends ResourceSupport {
 
 	private String path;
 	private String fileName;
+	private String hashId;
 
 	private String titulo;
 	private String descripcion;
 	private String tags;
 	private DateTime fecha;
 	private QUbicacionDto ubicacion;
-
-	private String urlImagenPortada;
+	
+	private String fileNameImagenPortada;
 	
 	public static QAlbumInfoDto fromAlbum(Album album) {
 		QAlbumInfoDto result = null;
@@ -24,15 +28,15 @@ public class QAlbumInfoDto {
 			result = new QAlbumInfoDto();
 			result.setPath(album.getPath());
 			result.setFileName(album.getFileName());
+			result.setHashId(album.getInfo().getHashId());
 			result.setTitulo(album.getTitulo());
 			result.setDescripcion(album.getDescripcion());
 			result.setTags(album.getTags());
 			result.setFecha(album.getFecha());
 			result.setUbicacion(QUbicacionDto.fromUbicacion(album.getUbicacion()));
 			
-			String urlImagenPortada = ImagenUtils.armarUrlMiniatura(album.getImagenPortada());
-			
-			result.setUrlImagenPortada(urlImagenPortada);
+			if (album.getImagenPortada() != null)
+				result.setFileNameImagenPortada(album.getImagenPortada().getFileName());
 		}
 		return result;
 	}
@@ -51,6 +55,14 @@ public class QAlbumInfoDto {
 
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
+	}
+	
+	public String getHashId() {
+		return hashId;
+	}
+	
+	public void setHashId(String hashId) {
+		this.hashId = hashId;
 	}
 
 	public String getTitulo() {
@@ -93,12 +105,12 @@ public class QAlbumInfoDto {
 		this.ubicacion = ubicacion;
 	}
 
-	public String getUrlImagenPortada() {
-		return urlImagenPortada;
+	public String getFileNameImagenPortada() {
+		return fileNameImagenPortada;
 	}
 
-	public void setUrlImagenPortada(String urlImagenPortada) {
-		this.urlImagenPortada = urlImagenPortada;
+	public void setFileNameImagenPortada(String fileNameImagenPortada) {
+		this.fileNameImagenPortada = fileNameImagenPortada;
 	}
-	
+
 }

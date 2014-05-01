@@ -12,6 +12,10 @@ public class AlbumInfoFile {
 	private int versionMayor;
 	private int versionMenor;
 	private int versionRevision;
+	/**
+	 * Este campo permite identificar univocamente al album, se arma en base al path relativo y el nombre de la carpeta del album.
+	 */
+	private String hashId;
 	
 	public static AlbumInfoFile fromAlbumInfo(AlbumInfo albumInfo) {
 		AlbumInfoFile result = null;
@@ -20,6 +24,9 @@ public class AlbumInfoFile {
 			result.setVersionMayor(albumInfo.getVersionMayor());
 			result.setVersionMenor(albumInfo.getVersionMenor());
 			result.setVersionRevision(albumInfo.getVersionRevision());
+			result.setHashId(albumInfo.getHashId());
+			result.setFechaActualizacion(albumInfo.getFechaActualizacion());
+			result.setContentHash(albumInfo.getContentHash());
 		}
 		return result;
 	}
@@ -31,13 +38,16 @@ public class AlbumInfoFile {
 			result.setVersionMayor(albumInfo.getVersionMayor());
 			result.setVersionMenor(albumInfo.getVersionMenor());
 			result.setVersionRevision(albumInfo.getVersionRevision());
+			result.setHashId(albumInfo.getHashId());
+			result.setFechaActualizacion(albumInfo.getFechaActualizacion());
+			result.setContentHash(albumInfo.getContentHash());
 		}
 		return result;
 	}
 
 	/**
 	 * Este campo contiene la fecha de actualizacion de la carpeta que contiene el album.
-	 * Se empla para determinar con rapidez si es necesario o no actualizar el album.
+	 * Se emplea para determinar con rapidez si es necesario o no actualizar el album.
 	 */
 	private DateTime fechaActualizacion;
 	/**
@@ -46,6 +56,12 @@ public class AlbumInfoFile {
 	 */
 	private String contentHash;
 
+	public String getHashId() {
+		return hashId;
+	}
+	public void setHashId(String hashId) {
+		this.hashId = hashId;
+	}
 	public DateTime getFechaActualizacion() {
 		return fechaActualizacion;
 	}

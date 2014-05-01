@@ -6,6 +6,6 @@ public interface AlbumConsultas {
 
 	public QServerInfoDto obtenerMetadatosServer();
 	public List<QAlbumInfoDto> obtenerAlbumes();
-	public QAlbumCompletoDto obtenerAlbum(String path, String fileName);
-	public byte[] obtenerImagen(String path, String fileNameAlbum, String fileNameImagen);
+	public QAlbumCompletoDto obtenerAlbum(String hashIdString);
+	public byte[] obtenerImagen(String hashId, String fileNameImagen);
 }

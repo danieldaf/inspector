@@ -8,14 +8,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -35,20 +33,17 @@ public class AlbumConsultasImpl implements AlbumConsultas {
 	@Autowired
 	private AlbumDao albumDao;
 	
-	@Autowired
-	private Environment env;
+	@Value("${inspector.server.version}")
+	private String serverVersion;
 	
-	private QServerInfoDto serverInfo;
-
-	@PostConstruct
-	public void completarInfoEstatica() {
-		serverInfo = new QServerInfoDto();
-		serverInfo.setServerVersion(env.getProperty("inspector.server.version"));
-		serverInfo.setAlbumVersion(env.getProperty("inspector.albumVersionMayor")+"."+env.getProperty("inspector.albumVersionMenor")+"."+env.getProperty("inspector.albumVersionRevision"));
-	}
+	@Value("${inspector.albumVersionMayor}.${inspector.albumVersionMenor}.${inspector.albumVersionRevision}")
+	private String albumVersion;
 
 	@Override
 	public QServerInfoDto obtenerMetadatosServer() {
+		QServerInfoDto serverInfo = new QServerInfoDto();
+		serverInfo.setServerVersion(serverVersion);
+		serverInfo.setAlbumVersion(albumVersion);
 		return serverInfo;
 	}
 
@@ -64,9 +59,9 @@ public class AlbumConsultasImpl implements AlbumConsultas {
 	}
 
 	@Override
-	public QAlbumCompletoDto obtenerAlbum(String path, String fileName) {
+	public QAlbumCompletoDto obtenerAlbum(String hashId) {
 		QAlbumCompletoDto result = null;
-		Album album = albumDao.recuperarAlbum(path, fileName);
+		Album album = albumDao.recuperarAlbum(hashId);
 		if (album != null) {
 			result = QAlbumCompletoDto.fromAlbum(album);
 		}
@@ -74,12 +69,12 @@ public class AlbumConsultasImpl implements AlbumConsultas {
 	}
 	
 	@Override
-	public byte[] obtenerImagen(String path, String fileNameAlbum, String fileNameImagen) {
+	public byte[] obtenerImagen(String hashId, String fileNameImagen) {
 		byte[] result = null;
-		if (path != null && fileNameAlbum != null && fileNameImagen != null) {
-			Imagen imagen = albumDao.recuperarImagen(path, fileNameAlbum, fileNameImagen);
+		if (hashId != null && fileNameImagen != null) {
+			Imagen imagen = albumDao.recuperarImagen(hashId, fileNameImagen);
 			if (imagen != null) {
-				String fullPath = imagen.getAlbum().getPathBase()+File.separator+path+File.separator+fileNameAlbum+File.separator+fileNameImagen;
+				String fullPath = imagen.getAlbum().getPathBase()+File.separator+imagen.getAlbum().getPath()+File.separator+imagen.getAlbum().getFileName()+File.separator+imagen.getFileName();
 				File file = new File(fullPath);
 				if (file != null && file.exists() && file.isFile() && file.canRead()) {
 					try {
@@ -102,7 +97,7 @@ public class AlbumConsultasImpl implements AlbumConsultas {
 					log.warn("Imagen requerida '"+fullPath+"' no accesible desde el file system.");
 				}
 			} else {
-				log.warn("Imagen requerida '"+path+"'"+File.separator+"'"+fileNameAlbum+"'"+File.separator+"'"+fileNameImagen+"' no encontrada en la base de datos.");
+				log.warn("Imagen requerida '"+hashId+"'"+File.separator+"'"+fileNameImagen+"' no encontrada en la base de datos.");
 			}
 		}
 		return result;

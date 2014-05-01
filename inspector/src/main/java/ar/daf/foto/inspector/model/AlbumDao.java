@@ -8,8 +8,10 @@ public interface AlbumDao {
 	List<Album> recuperarAlbumes();
 	
 	Album recuperarAlbum(Long id);
-	Album recuperarAlbum(String path, String fileName);
+//	Album recuperarAlbum(String path, String fileName);
+	Album recuperarAlbum(String hashId);
 	Album actualizarAlbum(Album album);
 	
-	Imagen recuperarImagen(String path, String fileNameAlbum, String fileNameImagen);
+//	Imagen recuperarImagen(String path, String fileNameAlbum, String fileNameImagen);
+	Imagen recuperarImagen(String hashId, String fileNameImagen);
 }

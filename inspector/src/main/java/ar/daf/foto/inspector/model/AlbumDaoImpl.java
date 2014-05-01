@@ -43,7 +43,8 @@ public class AlbumDaoImpl implements AlbumDao {
 					log.debug("Actualizando el album '"+albumIn.getFileName()+"' de id="+albumIn.getId());
 					albumOut = (Album)session.merge(albumIn);
 				} else {
-					Album albumDB = this.recuperarAlbum(albumIn.getPath(), albumIn.getFileName());
+//					Album albumDB = this.recuperarAlbum(albumIn.getPath(), albumIn.getFileName());
+					Album albumDB = this.recuperarAlbum(albumIn.getInfo().getHashId());
 					if (albumDB != null) {
 						albumIn.setId(albumDB.getId());
 						log.debug("Actualizando el album '"+albumIn.getFileName()+"' de id="+albumIn.getId());
@@ -78,14 +79,28 @@ public class AlbumDaoImpl implements AlbumDao {
 		return result;
 	}
 
+//	@SuppressWarnings("unchecked")
+//	@Override
+//	public Album recuperarAlbum(String path, String fileName) {
+//		Album result = null;
+//		Session session = sessionFactory.getCurrentSession();
+//		Query query = session.createQuery("from Album where path=:path and fileName=:fileName");
+//		query.setParameter("path", path);
+//		query.setParameter("fileName", fileName);
+//		query.setMaxResults(1);
+//		List<Album> listResult = query.list();
+//		if (listResult != null && !listResult.isEmpty())
+//			result = listResult.get(0);
+//		return result;
+//	}
+
 	@SuppressWarnings("unchecked")
 	@Override
-	public Album recuperarAlbum(String path, String fileName) {
+	public Album recuperarAlbum(String hashId) {
 		Album result = null;
 		Session session = sessionFactory.getCurrentSession();
-		Query query = session.createQuery("from Album where path=:path and fileName=:fileName");
-		query.setParameter("path", path);
-		query.setParameter("fileName", fileName);
+		Query query = session.createQuery("from Album where info.hashId=:hashId");
+		query.setParameter("hashId", hashId);
 		query.setMaxResults(1);
 		List<Album> listResult = query.list();
 		if (listResult != null && !listResult.isEmpty())
@@ -101,7 +116,8 @@ public class AlbumDaoImpl implements AlbumDao {
 			log.debug("Actualizando el abum '"+album.getFileName()+"' de id="+album.getId());
 			album = (Album)session.merge(album);
 		} else {
-			Album albumDB = this.recuperarAlbum(album.getPath(), album.getFileName());
+//			Album albumDB = this.recuperarAlbum(album.getPath(), album.getFileName());
+			Album albumDB = this.recuperarAlbum(album.getInfo().getHashId());
 			if (albumDB != null) {
 				album.setId(albumDB.getId());
 				log.debug("Actualizando el abum '"+album.getFileName()+"' de id="+album.getId());
@@ -114,13 +130,28 @@ public class AlbumDaoImpl implements AlbumDao {
 		return album;
 	}
 	
+//	@SuppressWarnings("unchecked")
+//	@Override
+//	public Imagen recuperarImagen(String path, String fileNameAlbum, String fileNameImagen) {
+//		Session session = sessionFactory.getCurrentSession();
+//		Query query = session.createQuery("from Imagen where fileName=:fileNameImagen and album.path=:path and album.fileName=:fileNameAlbum");
+//		query.setParameter("path", path);
+//		query.setParameter("fileNameAlbum", fileNameAlbum);
+//		query.setParameter("fileNameImagen", fileNameImagen);
+//		query.setMaxResults(1);
+//		List<Imagen> listResult = query.list();
+//		Imagen imagen = null;
+//		if (listResult != null && !listResult.isEmpty())
+//			imagen = listResult.get(0);
+//		return imagen;
+//	}
+	
 	@SuppressWarnings("unchecked")
 	@Override
-	public Imagen recuperarImagen(String path, String fileNameAlbum, String fileNameImagen) {
+	public Imagen recuperarImagen(String hashId, String fileNameImagen) {
 		Session session = sessionFactory.getCurrentSession();
-		Query query = session.createQuery("from Imagen where fileName=:fileNameImagen and album.path=:path and album.fileName=:fileNameAlbum");
-		query.setParameter("path", path);
-		query.setParameter("fileNameAlbum", fileNameAlbum);
+		Query query = session.createQuery("from Imagen where fileName=:fileNameImagen and album.info.hashId=:hashId");
+		query.setParameter("hashId", hashId);
 		query.setParameter("fileNameImagen", fileNameImagen);
 		query.setMaxResults(1);
 		List<Imagen> listResult = query.list();
@@ -129,5 +160,4 @@ public class AlbumDaoImpl implements AlbumDao {
 			imagen = listResult.get(0);
 		return imagen;
 	}
-	
 }

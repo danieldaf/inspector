@@ -22,7 +22,7 @@ import org.hibernate.validator.constraints.Length;
 import org.joda.time.DateTime;
 
 @Entity
-@Table(name="ALBUM", indexes={@Index(name="ALBUM_FILENAME_INDEX", columnList="PATH,FILENAME", unique=true)})
+@Table(name="ALBUM", indexes={@Index(name="ALBUM_FILENAME_INDEX", columnList="PATH,FILENAME", unique=true), @Index(name="ALBUM_HASH_ID_INDEX", columnList="HASH_ID", unique=true)})
 public class Album {
 	
 	@Id

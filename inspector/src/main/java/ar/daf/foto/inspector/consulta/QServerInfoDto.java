@@ -1,6 +1,8 @@
 package ar.daf.foto.inspector.consulta;
 
-public class QServerInfoDto {
+import org.springframework.hateoas.ResourceSupport;
+
+public class QServerInfoDto extends ResourceSupport {
 
 	private String serverVersion;
 	private String albumVersion;
