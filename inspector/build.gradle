@@ -21,18 +21,22 @@ buildscript {
         maven {
 			url 'http://repo.spring.io/plugins-release'
 			url 'http://repo.spring.io/libs-snapshot'
+			url 'http://repo.spring.io/milestone'
 		}
     }
     dependencies {
-        classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.0.1.RELEASE' 
+        classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.0.2.RELEASE' 
     }
 }
 
 dependencies {
-	compile 'org.springframework.boot:spring-boot-starter-web:1.0.1.RELEASE'
+	compile 'org.springframework.boot:spring-boot-starter-web:1.0.2.RELEASE'
 	compile 'org.springframework:spring-orm:4.0.3.RELEASE'
 	compile 'org.springframework.hateoas:spring-hateoas:0.10.0.RELEASE'
 	compile 'org.springframework:spring-context-support:4.0.3.RELEASE'
+//	compile 'org.springframework.security:spring-security-web:4.0.3.RELEASE'
+//	compile 'org.springframework.security:spring-security-core:4.0.3.RELEASE'
+//	compile 'org.springframework.security:spring-security-config:4.0.3.RELEASE'
 	compile 'com.fasterxml.jackson.core:jackson-core:2.3.3'
 	compile 'com.fasterxml.jackson.core:jackson-databind:2.3.3'
 	compile 'com.fasterxml.jackson.core:jackson-annotations:2.3.3'

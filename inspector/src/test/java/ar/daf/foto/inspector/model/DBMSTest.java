@@ -39,7 +39,7 @@ public class DBMSTest {
 		albumInfo.setVersionMenor(1);
 		albumInfo.setVersionRevision(34);
 		albumInfo.setFechaActualizacion(fechaActual);
-		albumInfo.setContentHash(HashUtils.getHash("Test de prueba de modelo de datos"));
+		albumInfo.setContentHash(HashUtils.armarHashSHA1("Test de prueba de modelo de datos"));
 		
 		Album album = new Album();
 		album.setInfo(albumInfo);
@@ -96,7 +96,7 @@ public class DBMSTest {
 		albumInfo.setVersionMenor(1);
 		albumInfo.setVersionRevision(34);
 		albumInfo.setFechaActualizacion(fechaActual);
-		albumInfo.setContentHash(HashUtils.getHash("Test de prueba de modelo de datos"));
+		albumInfo.setContentHash(HashUtils.armarHashSHA1("Test de prueba de modelo de datos"));
 		
 		Ubicacion ubicacion = new Ubicacion();
 		ubicacion.setPosicionamiento(false);

@@ -144,7 +144,7 @@ public class FileInspector {
 		album.getInfo().setFechaActualizacion(null);
 		album.getInfo().setContentHash(null);
 		String contenidoSinHash = JsonConverter.buildJson(album);
-		result = HashUtils.getHash(contenidoSinHash);
+		result = HashUtils.armarHashSHA1(contenidoSinHash);
 		album.getInfo().setFechaActualizacion(fechaActPrev);
 		album.getInfo().setContentHash(hashPrev);
 		return result;
@@ -176,7 +176,7 @@ public class FileInspector {
 								logDebug(directorio, "El hash del contenido del archivo no coincide con su contenido. Se requiere rearmar el album.");
 							} else {
 								//4.- Revisamos si el album fue movido de lugar
-								String hashId = HashUtils.getHash(album.getPath()+File.separator+album.getFileName());
+								String hashId = HashUtils.armarHashSHA1(album.getPath()+File.separator+album.getFileName());
 								if (!hashId.equals(album.getInfo().getHashId())) {
 									result = true;
 									logDebug(directorio, "Aparentemente el album fue movido de carpeta. El hashId almacenado no coincide. Se requiere rearmar el album.");
@@ -241,7 +241,7 @@ public class FileInspector {
 		 * Otra cosa que pudo haber cambiado sino son las imagenes, los nombres y la cantidad.
 		 * Eso hay que revisarlo.
 		 */
-		String hashId = HashUtils.getHash(album.getPath()+File.separator+album.getFileName());
+		String hashId = HashUtils.armarHashSHA1(album.getPath()+File.separator+album.getFileName());
 		album.getInfo().setHashId(hashId);
 		
 		List<ImagenFile> imagenes = new ArrayList<ImagenFile>();
@@ -311,7 +311,7 @@ public class FileInspector {
 		result.setImagenes(new ArrayList<ImagenFile>());
 		
 		String hashId = result.getPath()+File.separator+result.getFileName();
-		hashId = HashUtils.getHash(hashId);
+		hashId = HashUtils.armarHashSHA1(hashId);
 		info.setHashId(hashId);
 
 		DateTime firstDate = null;
