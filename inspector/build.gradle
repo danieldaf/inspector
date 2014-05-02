@@ -51,7 +51,7 @@ dependencies {
 	compile 'org.jadira.usertype:usertype.core:3.1.0.GA'
 	compile 'org.apache.commons:commons-dbcp2:2.0'
 	compile 'javax.servlet:javax.servlet-api:3.0.1'
-	runtime 'org.quartz-scheduler:quartz:2.2.1'
+	compile 'org.quartz-scheduler:quartz:2.2.1'
 	compile 'com.github.fge:uri-template:0.9'
 	
 	compile 'org.crsh:crsh.shell.ssh:1.2.9'
