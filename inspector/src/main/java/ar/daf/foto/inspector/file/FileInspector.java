@@ -112,7 +112,7 @@ public class FileInspector {
 		if (this.pathBase.equals(directorio.getAbsolutePath())) {
 			path = ".."+File.separator+directorio.getName()+File.separator+"..";
 		} else {
-			path = directorio.getAbsolutePath().substring(this.pathBase.length());
+			path = directorio.getParentFile().getAbsolutePath().substring(this.pathBase.length());
 			if (path.endsWith(File.separator))
 				path = path.substring(0, path.length()-1);
 			if (path.startsWith(File.separator))
