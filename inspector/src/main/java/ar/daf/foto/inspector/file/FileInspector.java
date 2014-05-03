@@ -107,6 +107,20 @@ public class FileInspector {
 		return albumes;
 	}
 	
+	protected String armarPathAlbum(File directorio) {
+		String path = "";
+		if (this.pathBase.equals(directorio.getAbsolutePath())) {
+			path = ".."+File.separator+directorio.getName()+File.separator+"..";
+		} else {
+			path = directorio.getAbsolutePath().substring(this.pathBase.length());
+			if (path.endsWith(File.separator))
+				path = path.substring(0, path.length()-1);
+			if (path.startsWith(File.separator))
+				path = path.substring(1);
+		}
+		return path;
+	}
+	
 	protected AlbumFile cargarAlbum(File dbTxt) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException, IOException {
 		AlbumFile result = null;
 		try {
@@ -123,11 +137,7 @@ public class FileInspector {
 			br.close();
 			result = JsonConverter.buildObject(AlbumFile.class, buffer.toString());
 			result.setPathBase(this.pathBase);
-			result.setPath(dbTxt.getParentFile().getParent().substring(this.pathBase.length()));
-			if (result.getPath().endsWith("/"))
-				result.setPath(result.getPath().substring(0, result.getPath().length()-1));
-			if (result.getPath().startsWith("/"))
-				result.setPath(result.getPath().substring(1));
+			result.setPath(armarPathAlbum(dbTxt.getParentFile()));
 			result.setFileName(dbTxt.getParentFile().getName());
 		} catch (FileNotFoundException e) {
 			logError(dbTxt.getParentFile(), e.getMessage());
@@ -302,11 +312,7 @@ public class FileInspector {
 		result.setTags(null);
 		result.setFecha(null);
 		result.setPathBase(this.pathBase);
-		result.setPath(directorio.getParent().substring(this.pathBase.length()));
-		if (result.getPath().endsWith("/"))
-			result.setPath(result.getPath().substring(0, result.getPath().length()-1));
-		if (result.getPath().startsWith("/"))
-			result.setPath(result.getPath().substring(1));
+		result.setPath(armarPathAlbum(directorio));
 		result.setFileName(directorio.getName());
 		result.setImagenes(new ArrayList<ImagenFile>());
 		

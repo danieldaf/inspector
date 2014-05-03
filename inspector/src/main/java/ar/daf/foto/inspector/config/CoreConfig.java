@@ -7,7 +7,6 @@ import javax.sql.DataSource;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.commons.dbcp2.BasicDataSourceFactory;
-import org.crsh.spring.SpringWebBootstrap;
 import org.hibernate.SessionFactory;
 import org.quartz.JobDetail;
 import org.quartz.Trigger;
@@ -34,9 +33,6 @@ import org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.scheduling.quartz.SimpleTriggerFactoryBean;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.joda.JodaModule;
-
 import ar.daf.foto.inspector.scanner.DirectoryScanner;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
@@ -44,10 +40,15 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.rolling.RollingFileAppender;
 import ch.qos.logback.core.rolling.TimeBasedRollingPolicy;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.joda.JodaModule;
+
 @Configuration
 @ComponentScan(basePackages={"ar.daf.foto.inspector"})
 @EnableAutoConfiguration(exclude={JpaBaseConfiguration.class, HibernateJpaAutoConfiguration.class, JpaRepositoriesAutoConfiguration.class, DataSourceAutoConfiguration.class, MessageSourceAutoConfiguration.class, AopAutoConfiguration.class, JmxAutoConfiguration.class})
 public class CoreConfig {
+	
+	private final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(getClass());
 
 	private Environment env;
 	
@@ -67,6 +68,7 @@ public class CoreConfig {
 		appenderFile.stop();
 		
 		TimeBasedRollingPolicy<?> rolling = ((TimeBasedRollingPolicy<?>)appenderFile.getRollingPolicy());
+		rolling.stop();
 		
 		String logFileName = appenderFile.getFile();
 		String logFileNamePattern = rolling.getFileNamePattern();
@@ -74,6 +76,8 @@ public class CoreConfig {
 		appenderFile.setFile(file.toString()+File.separator+logFileName);
 		rolling.setFileNamePattern(file.toString()+File.separator+logFileNamePattern);
 		rolling.setMaxHistory(maxHistory.intValue());
+		
+		rolling.start();
 		appenderFile.start();
 	}
 	
@@ -137,25 +141,25 @@ public class CoreConfig {
 		return new PersistenceExceptionTranslationPostProcessor();
 	}
 	
-	@Bean
-	@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-	public SpringWebBootstrap crshBootStrap() {
-		@SuppressWarnings("serial")
-		Properties crshProps = new Properties() {
-			{
-				setProperty("crash.vfs.refresh_period", env.getProperty("crash.vfs.refresh_period"));
-				setProperty("crash.ssh.port", env.getProperty("crash.ssh.port"));
-				setProperty("crash.ssh.auth-timeout", env.getProperty("crash.ssh.auth-timeout"));
-				setProperty("crash.ssh.idle-timeout", env.getProperty("crash.ssh.idle-timeout"));
-				setProperty("crash.auth", env.getProperty("crash.auth"));
-				setProperty("crash.auth.simple.username", env.getProperty("crash.auth.simple.username"));
-				setProperty("crash.auth.simple.password", env.getProperty("crash.auth.simple.password"));
-			}
-		};
-		SpringWebBootstrap result = new SpringWebBootstrap();
-		result.setConfig(crshProps);
-		return result;
-	}
+//	@Bean
+//	@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+//	public SpringWebBootstrap crshBootStrap() {
+//		@SuppressWarnings("serial")
+//		Properties crshProps = new Properties() {
+//			{
+//				setProperty("crash.vfs.refresh_period", env.getProperty("crash.vfs.refresh_period"));
+//				setProperty("crash.ssh.port", env.getProperty("crash.ssh.port"));
+//				setProperty("crash.ssh.auth-timeout", env.getProperty("crash.ssh.auth-timeout"));
+//				setProperty("crash.ssh.idle-timeout", env.getProperty("crash.ssh.idle-timeout"));
+//				setProperty("crash.auth", env.getProperty("crash.auth"));
+//				setProperty("crash.auth.simple.username", env.getProperty("crash.auth.simple.username"));
+//				setProperty("crash.auth.simple.password", env.getProperty("crash.auth.simple.password"));
+//			}
+//		};
+//		SpringWebBootstrap result = new SpringWebBootstrap();
+//		result.setConfig(crshProps);
+//		return result;
+//	}
 	
 	@Bean
 	@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)

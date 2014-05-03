@@ -1,7 +1,9 @@
 <configuration>
     
+	<property name="DEFAULT_PATTERN" value="%date %level{5} [%thread] %logger{10} [%line] %msg%n" scope="CONTEXT" />
+    
     <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <!-- La configuracion final del path del archivo de log se define por codigo en la clase CoreConfig.java -->        
+<!--         La configuracion final del path del archivo de log se define por codigo en la clase CoreConfig.java         -->
         <file>albumInspector.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>albumInspector.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
@@ -9,16 +11,14 @@
         </rollingPolicy>
         <encoder>
             <pattern>
-                %date %level{5} [%thread] %logger{10} [%file:%line] %msg%n
+            <pattern>${DEFAULT_PATTERN}</pattern>
             </pattern>
         </encoder>
     </appender>
     
     <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>
-                %date %level{5} [%thread] %logger{10} [%line] %msg%n
-            </pattern>
+            <pattern>${DEFAULT_PATTERN}</pattern>
         </encoder>
     </appender>
     

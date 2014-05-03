@@ -204,15 +204,31 @@ public class DirectoryScannerImpl implements DirectoryScanner {
 		synchronized (inspectores) {
 			prevInspectores.addAll(inspectores);
 		}
-		for (String path : config.getPaths()) {
-			FileInspector inspector = new FileInspector(path, config.getDbTextFileName(), config.getDbFileEncoding(), config.getExtensiones());
-			if (prevInspectores.contains(inspector)) {
-				inspector = prevInspectores.get(prevInspectores.indexOf(inspector));
-				log.debug("Reusando el inspector para el directorio: '"+path+"'");
-			} else {
-				log.debug("Agregado un inspector nuevo para el directorio: '"+path+"'");
+		if (config.getPaths() != null) {
+			for (String path : config.getPaths()) {
+				File pathDir = new File(path);
+				if (!pathDir.exists()) {
+					log.warn("Omiitendo la inspeccion del directorio '"+path+"' porque no existe.");
+				} else if (!pathDir.isDirectory()) {
+					log.warn("Omiitendo la inspeccion del directorio '"+path+"' porque no es un directorio.");
+				} else if (pathDir.getParent() == null) {
+					log.warn("Omiitendo la inspeccion del directorio '"+path+"' poque es un directorio raiz. Solo se puede configurar subdirectorios como carpetas de albumes.");
+				} else {
+					try {
+						path = pathDir.getCanonicalPath();
+					} catch (IOException e) {
+						log.warn("No se pudo determianr el path unico para '"+path+"':"+ e.getMessage());
+					}
+					FileInspector inspector = new FileInspector(path, config.getDbTextFileName(), config.getDbFileEncoding(), config.getExtensiones());
+					if (prevInspectores.contains(inspector)) {
+						inspector = prevInspectores.get(prevInspectores.indexOf(inspector));
+						log.debug("Reusando el inspector para el directorio: '"+path+"'");
+					} else {
+						log.debug("Agregado un inspector nuevo para el directorio: '"+path+"'");
+					}
+					newInspectores.add(inspector);
+				}
 			}
-			newInspectores.add(inspector);
 		}
 		synchronized (inspectores) {
 			inspectores.clear();
