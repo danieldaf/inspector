@@ -7,6 +7,8 @@ import javax.sql.DataSource;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.commons.dbcp2.BasicDataSourceFactory;
+import org.crsh.spring.SpringBootstrap;
+import org.crsh.spring.SpringWebBootstrap;
 import org.hibernate.SessionFactory;
 import org.quartz.JobDetail;
 import org.quartz.Trigger;
@@ -143,23 +145,23 @@ public class CoreConfig {
 	
 //	@Bean
 //	@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-//	public SpringWebBootstrap crshBootStrap() {
-//		@SuppressWarnings("serial")
-//		Properties crshProps = new Properties() {
-//			{
-//				setProperty("crash.vfs.refresh_period", env.getProperty("crash.vfs.refresh_period"));
-//				setProperty("crash.ssh.port", env.getProperty("crash.ssh.port"));
-//				setProperty("crash.ssh.auth-timeout", env.getProperty("crash.ssh.auth-timeout"));
-//				setProperty("crash.ssh.idle-timeout", env.getProperty("crash.ssh.idle-timeout"));
-//				setProperty("crash.auth", env.getProperty("crash.auth"));
-//				setProperty("crash.auth.simple.username", env.getProperty("crash.auth.simple.username"));
-//				setProperty("crash.auth.simple.password", env.getProperty("crash.auth.simple.password"));
-//			}
-//		};
-//		SpringWebBootstrap result = new SpringWebBootstrap();
-//		result.setConfig(crshProps);
-//		return result;
-//	}
+	public SpringBootstrap crshBootStrap() {
+		@SuppressWarnings("serial")
+		Properties crshProps = new Properties() {
+			{
+				setProperty("crash.vfs.refresh_period", env.getProperty("crash.vfs.refresh_period"));
+				setProperty("crash.ssh.port", env.getProperty("crash.ssh.port"));
+				setProperty("crash.ssh.auth-timeout", env.getProperty("crash.ssh.auth-timeout"));
+				setProperty("crash.ssh.idle-timeout", env.getProperty("crash.ssh.idle-timeout"));
+				setProperty("crash.auth", env.getProperty("crash.auth"));
+				setProperty("crash.auth.simple.username", env.getProperty("crash.auth.simple.username"));
+				setProperty("crash.auth.simple.password", env.getProperty("crash.auth.simple.password"));
+			}
+		};
+		SpringBootstrap result = new SpringWebBootstrap();
+		result.setConfig(crshProps);
+		return result;
+	}
 	
 	@Bean
 	@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)

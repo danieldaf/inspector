@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @Controller
 @RequestMapping("/consultas")
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class AlbumConsultasRestImpl implements AlbumConsultasRest {
+public class AlbumConsultasRestImpl {
 	
 	private final Logger log = LoggerFactory.getLogger(getClass());
 	
@@ -36,7 +36,6 @@ public class AlbumConsultasRestImpl implements AlbumConsultasRest {
 	@RequestMapping(method={RequestMethod.GET})
 	@ResponseBody
 	@ResponseStatus(value=HttpStatus.OK)
-	@Override
 	public QServerInfoDto obtenerMetadatosServer() {
 		QServerInfoDto result = albumConsultas.obtenerMetadatosServer();
 		result.add(linkTo(methodOn(AlbumConsultasRestImpl.class).obtenerMetadatosServer()).withSelfRel());
@@ -47,7 +46,6 @@ public class AlbumConsultasRestImpl implements AlbumConsultasRest {
 	@RequestMapping(method={RequestMethod.GET}, value="/album")
 	@ResponseBody
 	@ResponseStatus(value=HttpStatus.OK)
-	@Override
 	public List<QAlbumInfoDto> obtenerAlbumes() {
 		List<QAlbumInfoDto> result = albumConsultas.obtenerAlbumes();
 		if (result != null && !result.isEmpty()) {
@@ -73,7 +71,6 @@ public class AlbumConsultasRestImpl implements AlbumConsultasRest {
 	}
 
 	@RequestMapping(method={RequestMethod.GET}, value="/album/{hashId}")
-	@Override
 	public ResponseEntity<QAlbumCompletoDto> obtenerAlbum(@PathVariable("hashId")String hashId) {
 		ResponseEntity<QAlbumCompletoDto> result = null;
 		QAlbumCompletoDto resultDto = null;
@@ -117,7 +114,6 @@ public class AlbumConsultasRestImpl implements AlbumConsultasRest {
 	}
 	
 	@RequestMapping(method={RequestMethod.GET}, value="/album/{hashId}/{fileNameImagen}.{fileExt}", produces="image/*")
-	@Override
 	public ResponseEntity<byte[]> obtenerImagen(@PathVariable("hashId")String hashId, @PathVariable("fileNameImagen")String fileNameImagen, @PathVariable("fileExt")String fileExt) {
 		ResponseEntity<byte[]> result = null;
 		try {
@@ -144,7 +140,6 @@ public class AlbumConsultasRestImpl implements AlbumConsultasRest {
 	}
 
 	@RequestMapping(method={RequestMethod.GET}, value="/album/{hashId}/miniatura/{fileNameImagen}.{fileExt}", produces="image/*")
-	@Override
 	public ResponseEntity<byte[]> obtenerImagenMiniatura(@PathVariable("hashId")String hashId, @PathVariable("fileNameImagen")String fileNameImagen, @PathVariable("fileExt")String fileExt) {
 		ResponseEntity<byte[]> result = null;
 		try {

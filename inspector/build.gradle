@@ -30,7 +30,12 @@ buildscript {
 }
 
 dependencies {
-	compile 'org.springframework.boot:spring-boot-starter-web:1.0.2.RELEASE'
+	compile ('org.springframework.boot:spring-boot-starter-web:1.0.2.RELEASE') {
+		exclude module: "spring-boot-starter-tomcat"
+	}
+//	compile 'org.springframework.boot:spring-boot-starter-jetty:1.0.2.RELEASE'
+	compile 'org.eclipse.jetty:jetty-webapp:9.+'
+	compile 'org.eclipse.jetty:jetty-jsp:9.+'
 	compile 'org.springframework:spring-orm:4.0.3.RELEASE'
 	compile 'org.springframework.hateoas:spring-hateoas:0.10.0.RELEASE'
 	compile 'org.springframework:spring-context-support:4.0.3.RELEASE'
@@ -54,10 +59,10 @@ dependencies {
 	compile 'org.quartz-scheduler:quartz:2.2.1'
 	compile 'com.github.fge:uri-template:0.9'
 	
-//	compile 'org.crsh:crsh.shell.core:1.2.9'
-//	compile 'org.crsh:crsh.shell.ssh:1.2.9'
-//	compile 'org.crsh:crsh.shell.embed:1.2.9'
-//	compile 'org.crsh:crsh.shell.embed.spring:1.2.9'
+	compile 'org.crsh:crsh.shell.core:1.2.9'
+	compile 'org.crsh:crsh.shell.ssh:1.2.9'
+	compile 'org.crsh:crsh.shell.embed:1.2.9'
+	compile 'org.crsh:crsh.shell.embed.spring:1.2.9'
 	
 	testCompile 'org.testng:testng:6.8.8'
 }

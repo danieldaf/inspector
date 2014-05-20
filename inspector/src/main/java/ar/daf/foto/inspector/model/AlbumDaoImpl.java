@@ -6,6 +6,7 @@ import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.type.StringType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,6 +70,21 @@ public class AlbumDaoImpl implements AlbumDao {
 		Query query = session.createQuery("from Album");
 		result = query.list();
 		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Album> recuperarAlbumes(List<String> hashIdAlbumes) {
+		List<Album> result = null;
+		if (hashIdAlbumes != null && !hashIdAlbumes.isEmpty()) {
+			Session session = sessionFactory.getCurrentSession();
+			Query query = session.createQuery("from Album where info.hashId in (:hashIds)");
+			query.setParameterList("hashIds", hashIdAlbumes);		
+			result = query.list();
+		} else {
+			result = new ArrayList<Album>();
+		}
+		return result;		
 	}
 
 	@Override

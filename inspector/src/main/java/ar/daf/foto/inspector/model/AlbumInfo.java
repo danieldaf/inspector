@@ -28,6 +28,11 @@ public class AlbumInfo {
 	@Min(0)
 	private int versionRevision;
 	
+	/**
+	 * Este campo cotiene un hash usando SHA1 del path relativo del album dentro de la carpeta base.
+	 * Es decir es un hash del los campos path+File.separator+fileName del Album.
+	 * Es el id que permite identificar un album univocamente entre distintos servidores.
+	 */
 	@Column(name="HASH_ID")
 	@NotNull
 	@Length(min=0, max=128)

@@ -6,6 +6,7 @@ public interface AlbumDao {
 
 	List<Album> actualizarAlbumes(List<Album> listaAlbumes);
 	List<Album> recuperarAlbumes();
+	List<Album> recuperarAlbumes(List<String> hashIdAlbumes);
 	
 	Album recuperarAlbum(Long id);
 //	Album recuperarAlbum(String path, String fileName);
