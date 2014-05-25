@@ -35,6 +35,8 @@ import org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.scheduling.quartz.SimpleTriggerFactoryBean;
 
+import ar.daf.foto.inspector.Main;
+import ar.daf.foto.inspector.model.Album;
 import ar.daf.foto.inspector.scanner.DirectoryScanner;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
@@ -46,7 +48,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
 
 @Configuration
-@ComponentScan(basePackages={"ar.daf.foto.inspector"})
+@ComponentScan(basePackageClasses={Main.class})
 @EnableAutoConfiguration(exclude={JpaBaseConfiguration.class, HibernateJpaAutoConfiguration.class, JpaRepositoriesAutoConfiguration.class, DataSourceAutoConfiguration.class, MessageSourceAutoConfiguration.class, AopAutoConfiguration.class, JmxAutoConfiguration.class})
 public class CoreConfig {
 	
@@ -114,15 +116,15 @@ public class CoreConfig {
 			{
 				setProperty("hibernate.hbm2ddl.auto", env.getProperty("spring.jpa.properties.hibernate.hbm2ddl.auto"));
 				setProperty("hibernate.dialect", env.getProperty("spring.jpa.properties.hibernate.dialect"));
-				setProperty("hibernate.cache.provider_class", "spring.jpa.properties.hibernate.cache.provider_class");
-				setProperty("hibernate.show_sql", "spring.jpa.properties.hibernate.show_sql");
-				setProperty("hibernate.globally_quoted_identifiers", "spring.jpa.properties.hibernate.globally_quoted_identifiers");
+				setProperty("hibernate.cache.provider_class", env.getProperty("spring.jpa.properties.hibernate.cache.provider_class"));
+				setProperty("hibernate.show_sql", env.getProperty("spring.jpa.properties.hibernate.show_sql"));
+//				setProperty("hibernate.globally_quoted_identifiers", env.getProperty("spring.jpa.properties.hibernate.globally_quoted_identifiers"));
 			}
 		};
 
 		LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
 		sessionFactory.setDataSource(dataSource);
-		sessionFactory.setPackagesToScan("ar.daf.foto.inspector.model");
+		sessionFactory.setPackagesToScan(Album.class.getPackage().getName());
 		sessionFactory.setHibernateProperties(hibernateProps);
 		return sessionFactory;
 	}
