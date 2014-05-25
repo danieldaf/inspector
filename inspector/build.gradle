@@ -58,6 +58,7 @@ dependencies {
 	compile 'javax.servlet:javax.servlet-api:3.0.1'
 	compile 'org.quartz-scheduler:quartz:2.2.1'
 	compile 'com.github.fge:uri-template:0.9'
+	compile 'net.sf.jasperreports:jasperreports:4.0.2'
 	
 	compile 'org.crsh:crsh.shell.core:1.2.9'
 	compile 'org.crsh:crsh.shell.ssh:1.2.9'
