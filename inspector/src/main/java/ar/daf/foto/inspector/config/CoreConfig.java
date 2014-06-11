@@ -26,7 +26,9 @@ import org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.Scope;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.orm.hibernate4.HibernateTransactionManager;
@@ -34,6 +36,7 @@ import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
 import org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.scheduling.quartz.SimpleTriggerFactoryBean;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import ar.daf.foto.inspector.Main;
 import ar.daf.foto.inspector.model.Album;
@@ -50,6 +53,8 @@ import com.fasterxml.jackson.datatype.joda.JodaModule;
 @Configuration
 @ComponentScan(basePackageClasses={Main.class})
 @EnableAutoConfiguration(exclude={JpaBaseConfiguration.class, HibernateJpaAutoConfiguration.class, JpaRepositoriesAutoConfiguration.class, DataSourceAutoConfiguration.class, MessageSourceAutoConfiguration.class, AopAutoConfiguration.class, JmxAutoConfiguration.class})
+@PropertySource("classpath:application.properties")
+@EnableTransactionManagement
 public class CoreConfig {
 	
 	private final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(getClass());

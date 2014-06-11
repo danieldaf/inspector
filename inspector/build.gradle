@@ -6,7 +6,7 @@ sourceCompatibility = 1.7
 version = '0.1.0'
 jar {
     manifest {
-        attributes 'Implementation-Title': 'Inspector de Fotos', 'Implementation-Version': version
+        attributes 'Implementation-Title': 'Inspector de Fotos', 'Implementation-Version': version, 'Main-Class': 'ar.daf.foto.inspector.Main'
     }
 }
 
@@ -19,9 +19,9 @@ buildscript {
 		mavenCentral()
     	mavenLocal()
         maven {
+			url 'http://repo.spring.io/release'
 			url 'http://repo.spring.io/plugins-release'
 			url 'http://repo.spring.io/libs-snapshot'
-			url 'http://repo.spring.io/milestone'
 		}
     }
     dependencies {
@@ -65,16 +65,4 @@ dependencies {
 	compile 'org.crsh:crsh.shell.embed.spring:1.2.9'
 	
 	testCompile 'org.testng:testng:6.8.8'
-}
-
-test {
-    systemProperties 'property': 'value'
-}
-
-uploadArchives {
-    repositories {
-       flatDir {
-           dirs 'repos'
-       }
-    }
 }
