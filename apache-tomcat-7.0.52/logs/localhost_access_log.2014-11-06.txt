@@ -1,0 +1,2 @@
+0:0:0:0:0:0:0:1 - - [06/Nov/2014:00:49:23 -0300] "GET /inspector-0.1.0/consultas HTTP/1.1" 200 276
+0:0:0:0:0:0:0:1 - - [06/Nov/2014:00:49:33 -0300] "GET /inspector-0.1.0/consultas/album HTTP/1.1" 200 9642

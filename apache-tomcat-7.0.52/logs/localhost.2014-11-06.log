@@ -1,0 +1,24 @@
+nov 06, 2014 12:28:39 AM org.apache.catalina.core.ApplicationContext log
+Información: SessionListener: contextDestroyed()
+nov 06, 2014 12:28:39 AM org.apache.catalina.core.ApplicationContext log
+Información: ContextListener: contextDestroyed()
+nov 06, 2014 12:48:55 AM org.apache.catalina.core.ApplicationContext log
+Información: Spring WebApplicationInitializers detected on classpath: [ar.daf.foto.inspector.MainWeb@569de602]
+nov 06, 2014 12:48:57 AM org.apache.catalina.core.ApplicationContext log
+Información: Initializing Spring embedded WebApplicationContext
+nov 06, 2014 12:49:01 AM org.apache.catalina.core.ApplicationContext log
+Información: ContextListener: contextInitialized()
+nov 06, 2014 12:49:01 AM org.apache.catalina.core.ApplicationContext log
+Información: SessionListener: contextInitialized()
+nov 06, 2014 12:49:01 AM org.apache.catalina.core.ApplicationContext log
+Información: ContextListener: attributeAdded('org.apache.jasper.compiler.TldLocationsCache', 'org.apache.jasper.compiler.TldLocationsCache@63cd6295')
+nov 06, 2014 12:49:23 AM org.apache.catalina.core.ApplicationContext log
+Información: Initializing Spring FrameworkServlet 'dispatcherServlet'
+nov 06, 2014 12:49:39 AM org.apache.catalina.core.ApplicationContext log
+Información: SessionListener: contextDestroyed()
+nov 06, 2014 12:49:39 AM org.apache.catalina.core.ApplicationContext log
+Información: ContextListener: contextDestroyed()
+nov 06, 2014 12:49:39 AM org.apache.catalina.core.ApplicationContext log
+Información: Destroying Spring FrameworkServlet 'dispatcherServlet'
+nov 06, 2014 12:49:39 AM org.apache.catalina.core.ApplicationContext log
+Información: Closing Spring root WebApplicationContext

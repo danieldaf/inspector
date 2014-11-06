@@ -1,13 +1,18 @@
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'spring-boot'
+apply plugin: 'war'
 
 sourceCompatibility = 1.7
-version = '0.1.0'
-jar {
-    manifest {
-        attributes 'Implementation-Title': 'Inspector de Fotos', 'Implementation-Version': version
-    }
+//version = '0.1.0'
+//jar {
+//   manifest {
+//        attributes 'Implementation-Title': 'Inspector de Fotos', 'Implementation-Version': version
+//    }
+//}
+war {
+	baseName = 'inspector'
+	version =  '0.1.0'
 }
 
 repositories {
@@ -29,13 +34,19 @@ buildscript {
     }
 }
 
+configurations { 
+	provided 
+	compile.extendsFrom provided 
+}
+
 dependencies {
 	compile ('org.springframework.boot:spring-boot-starter-web:1.0.2.RELEASE') {
 		exclude module: "spring-boot-starter-tomcat"
 	}
 //	compile 'org.springframework.boot:spring-boot-starter-jetty:1.0.2.RELEASE'
-	compile 'org.eclipse.jetty:jetty-webapp:9.+'
-	compile 'org.eclipse.jetty:jetty-jsp:9.+'
+	provided "org.springframework.boot:spring-boot-starter-tomcat"
+//	compile 'org.eclipse.jetty:jetty-webapp:9.+'
+//	compile 'org.eclipse.jetty:jetty-jsp:9.+'
 	compile 'org.springframework:spring-orm:4.0.3.RELEASE'
 	compile 'org.springframework.hateoas:spring-hateoas:0.10.0.RELEASE'
 	compile 'org.springframework:spring-context-support:4.0.3.RELEASE'
@@ -51,11 +62,11 @@ dependencies {
 	compile 'org.hibernate:hibernate-core:4.3.5.Final'
 	compile 'org.hibernate:hibernate-validator:5.1.0.Final'
 	compile 'org.hibernate:hibernate-validator-cdi:5.1.0.Final'
-	compile 'javax.el:javax.el-api:2.2.4'
+	provided 'javax.el:javax.el-api:2.2.4'
 	runtime 'org.hsqldb:hsqldb:2.3.2'
 	compile 'org.jadira.usertype:usertype.core:3.1.0.GA'
 	compile 'org.apache.commons:commons-dbcp2:2.0'
-	compile 'javax.servlet:javax.servlet-api:3.0.1'
+	provided 'javax.servlet:javax.servlet-api:3.0.1'
 	compile 'org.quartz-scheduler:quartz:2.2.1'
 	compile 'com.github.fge:uri-template:0.9'
 	

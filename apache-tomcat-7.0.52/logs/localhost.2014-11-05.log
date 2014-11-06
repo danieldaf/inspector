@@ -1,0 +1,136 @@
+nov 05, 2014 9:54:58 PM org.apache.catalina.core.ApplicationContext log
+Información: No Spring WebApplicationInitializer types detected on classpath
+nov 05, 2014 9:54:59 PM org.apache.catalina.core.ApplicationContext log
+Información: ContextListener: contextInitialized()
+nov 05, 2014 9:54:59 PM org.apache.catalina.core.ApplicationContext log
+Información: SessionListener: contextInitialized()
+nov 05, 2014 9:54:59 PM org.apache.catalina.core.ApplicationContext log
+Información: ContextListener: attributeAdded('org.apache.jasper.compiler.TldLocationsCache', 'org.apache.jasper.compiler.TldLocationsCache@bf31d53')
+nov 05, 2014 9:55:10 PM org.apache.catalina.core.StandardWrapperValve invoke
+Grave: El Servlet.service() para el servlet [jsp] en el contexto con ruta [] lanzó la excepción [javax.servlet.ServletException: java.lang.NullPointerException] con causa raíz
+java.lang.NullPointerException
+	at org.apache.jsp.index_jsp._jspService(index_jsp.java:55)
+	at org.apache.jasper.runtime.HttpJspBase.service(HttpJspBase.java:70)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:727)
+	at org.apache.jasper.servlet.JspServletWrapper.service(JspServletWrapper.java:432)
+	at org.apache.jasper.servlet.JspServlet.serviceJspFile(JspServlet.java:390)
+	at org.apache.jasper.servlet.JspServlet.service(JspServlet.java:334)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:727)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:303)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:208)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:52)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:241)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:208)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:220)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:122)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:170)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:98)
+	at org.apache.catalina.valves.AccessLogValve.invoke(AccessLogValve.java:950)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:116)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:408)
+	at org.apache.coyote.http11.AbstractHttp11Processor.process(AbstractHttp11Processor.java:1040)
+	at org.apache.coyote.AbstractProtocol$AbstractConnectionHandler.process(AbstractProtocol.java:607)
+	at org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor.run(JIoEndpoint.java:313)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1110)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:603)
+	at java.lang.Thread.run(Thread.java:722)
+
+nov 05, 2014 9:55:34 PM org.apache.catalina.core.ApplicationContext log
+Información: SessionListener: contextDestroyed()
+nov 05, 2014 9:55:34 PM org.apache.catalina.core.ApplicationContext log
+Información: ContextListener: contextDestroyed()
+nov 05, 2014 9:55:49 PM org.apache.catalina.core.ApplicationContext log
+Información: ContextListener: contextInitialized()
+nov 05, 2014 9:55:49 PM org.apache.catalina.core.ApplicationContext log
+Información: SessionListener: contextInitialized()
+nov 05, 2014 9:55:49 PM org.apache.catalina.core.ApplicationContext log
+Información: ContextListener: attributeAdded('org.apache.jasper.compiler.TldLocationsCache', 'org.apache.jasper.compiler.TldLocationsCache@b852ae5')
+nov 05, 2014 9:56:07 PM org.apache.catalina.core.ApplicationContext log
+Información: SessionListener: contextDestroyed()
+nov 05, 2014 9:56:07 PM org.apache.catalina.core.ApplicationContext log
+Información: ContextListener: contextDestroyed()
+nov 05, 2014 9:58:32 PM org.apache.catalina.core.ApplicationContext log
+Información: No Spring WebApplicationInitializer types detected on classpath
+nov 05, 2014 9:58:51 PM org.apache.catalina.core.ApplicationContext log
+Información: ContextListener: contextInitialized()
+nov 05, 2014 9:58:51 PM org.apache.catalina.core.ApplicationContext log
+Información: SessionListener: contextInitialized()
+nov 05, 2014 9:58:51 PM org.apache.catalina.core.ApplicationContext log
+Información: ContextListener: attributeAdded('org.apache.jasper.compiler.TldLocationsCache', 'org.apache.jasper.compiler.TldLocationsCache@37826cb9')
+nov 05, 2014 10:00:07 PM org.apache.catalina.core.StandardWrapperValve invoke
+Grave: El Servlet.service() para el servlet [jsp] en el contexto con ruta [] lanzó la excepción [javax.servlet.ServletException: java.lang.NullPointerException] con causa raíz
+java.lang.NullPointerException
+	at org.apache.jsp.index_jsp._jspService(index_jsp.java:55)
+	at org.apache.jasper.runtime.HttpJspBase.service(HttpJspBase.java:70)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:727)
+	at org.apache.jasper.servlet.JspServletWrapper.service(JspServletWrapper.java:432)
+	at org.apache.jasper.servlet.JspServlet.serviceJspFile(JspServlet.java:390)
+	at org.apache.jasper.servlet.JspServlet.service(JspServlet.java:334)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:727)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:303)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:208)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:52)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:241)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:208)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:220)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:122)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:170)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:98)
+	at org.apache.catalina.valves.AccessLogValve.invoke(AccessLogValve.java:950)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:116)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:408)
+	at org.apache.coyote.http11.AbstractHttp11Processor.process(AbstractHttp11Processor.java:1040)
+	at org.apache.coyote.AbstractProtocol$AbstractConnectionHandler.process(AbstractProtocol.java:607)
+	at org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor.run(JIoEndpoint.java:313)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1110)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:603)
+	at java.lang.Thread.run(Thread.java:722)
+
+nov 05, 2014 10:05:05 PM org.apache.catalina.core.ApplicationContext log
+Información: SessionListener: contextDestroyed()
+nov 05, 2014 10:05:05 PM org.apache.catalina.core.ApplicationContext log
+Información: ContextListener: contextDestroyed()
+nov 05, 2014 10:31:37 PM org.apache.catalina.core.ApplicationContext log
+Información: No Spring WebApplicationInitializer types detected on classpath
+nov 05, 2014 10:31:37 PM org.apache.catalina.core.ApplicationContext log
+Información: ContextListener: contextInitialized()
+nov 05, 2014 10:31:37 PM org.apache.catalina.core.ApplicationContext log
+Información: SessionListener: contextInitialized()
+nov 05, 2014 10:31:37 PM org.apache.catalina.core.ApplicationContext log
+Información: ContextListener: attributeAdded('org.apache.jasper.compiler.TldLocationsCache', 'org.apache.jasper.compiler.TldLocationsCache@444d9ce6')
+nov 05, 2014 10:33:36 PM org.apache.catalina.core.ApplicationContext log
+Información: SessionListener: contextDestroyed()
+nov 05, 2014 10:33:36 PM org.apache.catalina.core.ApplicationContext log
+Información: ContextListener: contextDestroyed()
+nov 05, 2014 10:37:36 PM org.apache.catalina.core.ApplicationContext log
+Información: No Spring WebApplicationInitializer types detected on classpath
+nov 05, 2014 10:37:36 PM org.apache.catalina.core.ApplicationContext log
+Información: ContextListener: contextInitialized()
+nov 05, 2014 10:37:36 PM org.apache.catalina.core.ApplicationContext log
+Información: SessionListener: contextInitialized()
+nov 05, 2014 10:37:36 PM org.apache.catalina.core.ApplicationContext log
+Información: ContextListener: attributeAdded('org.apache.jasper.compiler.TldLocationsCache', 'org.apache.jasper.compiler.TldLocationsCache@55bce7e2')
+nov 05, 2014 10:38:16 PM org.apache.catalina.core.ApplicationContext log
+Información: SessionListener: contextDestroyed()
+nov 05, 2014 10:38:16 PM org.apache.catalina.core.ApplicationContext log
+Información: ContextListener: contextDestroyed()
+nov 05, 2014 10:40:23 PM org.apache.catalina.core.ApplicationContext log
+Información: No Spring WebApplicationInitializer types detected on classpath
+nov 05, 2014 10:40:24 PM org.apache.catalina.core.ApplicationContext log
+Información: ContextListener: contextInitialized()
+nov 05, 2014 10:40:24 PM org.apache.catalina.core.ApplicationContext log
+Información: SessionListener: contextInitialized()
+nov 05, 2014 10:40:24 PM org.apache.catalina.core.ApplicationContext log
+Información: ContextListener: attributeAdded('org.apache.jasper.compiler.TldLocationsCache', 'org.apache.jasper.compiler.TldLocationsCache@55bce7e2')
+nov 05, 2014 10:44:26 PM org.apache.catalina.core.ApplicationContext log
+Información: SessionListener: contextDestroyed()
+nov 05, 2014 10:44:26 PM org.apache.catalina.core.ApplicationContext log
+Información: ContextListener: contextDestroyed()
+nov 05, 2014 10:47:40 PM org.apache.catalina.core.ApplicationContext log
+Información: No Spring WebApplicationInitializer types detected on classpath
+nov 05, 2014 10:47:40 PM org.apache.catalina.core.ApplicationContext log
+Información: ContextListener: contextInitialized()
+nov 05, 2014 10:47:40 PM org.apache.catalina.core.ApplicationContext log
+Información: SessionListener: contextInitialized()
+nov 05, 2014 10:47:40 PM org.apache.catalina.core.ApplicationContext log
+Información: ContextListener: attributeAdded('org.apache.jasper.compiler.TldLocationsCache', 'org.apache.jasper.compiler.TldLocationsCache@7659bf1')

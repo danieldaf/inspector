@@ -1,0 +1,68 @@
+nov 06, 2014 12:28:39 AM org.apache.coyote.AbstractProtocol pause
+Información: Pausing ProtocolHandler ["http-bio-8080"]
+nov 06, 2014 12:28:39 AM org.apache.coyote.AbstractProtocol pause
+Información: Pausing ProtocolHandler ["ajp-bio-8009"]
+nov 06, 2014 12:28:39 AM org.apache.catalina.core.StandardService stopInternal
+Información: Parando servicio Catalina
+nov 06, 2014 12:28:39 AM org.apache.coyote.AbstractProtocol stop
+Información: Stopping ProtocolHandler ["http-bio-8080"]
+nov 06, 2014 12:28:39 AM org.apache.coyote.AbstractProtocol stop
+Información: Stopping ProtocolHandler ["ajp-bio-8009"]
+nov 06, 2014 12:28:39 AM org.apache.coyote.AbstractProtocol destroy
+Información: Destroying ProtocolHandler ["http-bio-8080"]
+nov 06, 2014 12:28:39 AM org.apache.coyote.AbstractProtocol destroy
+Información: Destroying ProtocolHandler ["ajp-bio-8009"]
+nov 06, 2014 12:48:51 AM org.apache.catalina.core.AprLifecycleListener init
+Información: La biblioteca nativa de Apache Tomcat basada en ARP que permite un rendimiento óptimo en entornos de desarrollo no ha sido hallada en java.library.path: /home/daniel/local/opt/subversion-1.7.9/lib:/home/daniel/local/opt/subversion-1.7.9/lib::/usr/java/packages/lib/amd64:/usr/lib64:/lib64:/lib:/usr/lib
+nov 06, 2014 12:48:51 AM org.apache.coyote.AbstractProtocol init
+Información: Initializing ProtocolHandler ["http-bio-8080"]
+nov 06, 2014 12:48:51 AM org.apache.coyote.AbstractProtocol init
+Información: Initializing ProtocolHandler ["ajp-bio-8009"]
+nov 06, 2014 12:48:51 AM org.apache.catalina.startup.Catalina load
+Información: Initialization processed in 502 ms
+nov 06, 2014 12:48:51 AM org.apache.catalina.core.StandardService startInternal
+Información: Arrancando servicio Catalina
+nov 06, 2014 12:48:51 AM org.apache.catalina.core.StandardEngine startInternal
+Información: Starting Servlet Engine: Apache Tomcat/7.0.52
+nov 06, 2014 12:48:51 AM org.apache.catalina.startup.HostConfig deployWAR
+Información: Despliegue del archivo /home/daniel/local/proys/personal/foto/git/apache-tomcat-7.0.52/webapps/inspector-0.1.0.war de la aplicación web
+nov 06, 2014 12:48:51 AM org.apache.catalina.loader.WebappClassLoader validateJarFile
+Información: validateJarFile(/home/daniel/local/proys/personal/foto/git/apache-tomcat-7.0.52/webapps/inspector-0.1.0/WEB-INF/lib/javax.el-api-2.2.4.jar) - jar not loaded. See Servlet Spec 3.0, section 10.7.2. Offending class: javax/el/Expression.class
+nov 06, 2014 12:48:51 AM org.apache.catalina.loader.WebappClassLoader validateJarFile
+Información: validateJarFile(/home/daniel/local/proys/personal/foto/git/apache-tomcat-7.0.52/webapps/inspector-0.1.0/WEB-INF/lib/javax.servlet-api-3.0.1.jar) - jar not loaded. See Servlet Spec 3.0, section 10.7.2. Offending class: javax/servlet/Servlet.class
+nov 06, 2014 12:48:51 AM org.apache.catalina.loader.WebappClassLoader validateJarFile
+Información: validateJarFile(/home/daniel/local/proys/personal/foto/git/apache-tomcat-7.0.52/webapps/inspector-0.1.0/WEB-INF/lib/tomcat-embed-core-7.0.52.jar) - jar not loaded. See Servlet Spec 3.0, section 10.7.2. Offending class: javax/servlet/Servlet.class
+nov 06, 2014 12:48:51 AM org.apache.catalina.loader.WebappClassLoader validateJarFile
+Información: validateJarFile(/home/daniel/local/proys/personal/foto/git/apache-tomcat-7.0.52/webapps/inspector-0.1.0/WEB-INF/lib/tomcat-embed-el-7.0.52.jar) - jar not loaded. See Servlet Spec 3.0, section 10.7.2. Offending class: javax/el/Expression.class
+nov 06, 2014 12:49:01 AM org.apache.catalina.startup.HostConfig deployDirectory
+Información: Despliegue del directorio /home/daniel/local/proys/personal/foto/git/apache-tomcat-7.0.52/webapps/host-manager de la aplicación web
+nov 06, 2014 12:49:01 AM org.apache.catalina.startup.HostConfig deployDirectory
+Información: Despliegue del directorio /home/daniel/local/proys/personal/foto/git/apache-tomcat-7.0.52/webapps/docs de la aplicación web
+nov 06, 2014 12:49:01 AM org.apache.catalina.startup.HostConfig deployDirectory
+Información: Despliegue del directorio /home/daniel/local/proys/personal/foto/git/apache-tomcat-7.0.52/webapps/manager de la aplicación web
+nov 06, 2014 12:49:01 AM org.apache.catalina.startup.HostConfig deployDirectory
+Información: Despliegue del directorio /home/daniel/local/proys/personal/foto/git/apache-tomcat-7.0.52/webapps/ROOT de la aplicación web
+nov 06, 2014 12:49:01 AM org.apache.catalina.startup.HostConfig deployDirectory
+Información: Despliegue del directorio /home/daniel/local/proys/personal/foto/git/apache-tomcat-7.0.52/webapps/examples de la aplicación web
+nov 06, 2014 12:49:01 AM org.apache.coyote.AbstractProtocol start
+Información: Starting ProtocolHandler ["http-bio-8080"]
+nov 06, 2014 12:49:01 AM org.apache.coyote.AbstractProtocol start
+Información: Starting ProtocolHandler ["ajp-bio-8009"]
+nov 06, 2014 12:49:01 AM org.apache.catalina.startup.Catalina start
+Información: Server startup in 10182 ms
+nov 06, 2014 12:49:38 AM org.apache.coyote.AbstractProtocol pause
+Información: Pausing ProtocolHandler ["http-bio-8080"]
+nov 06, 2014 12:49:39 AM org.apache.coyote.AbstractProtocol pause
+Información: Pausing ProtocolHandler ["ajp-bio-8009"]
+nov 06, 2014 12:49:39 AM org.apache.catalina.core.StandardService stopInternal
+Información: Parando servicio Catalina
+nov 06, 2014 12:49:39 AM org.apache.catalina.loader.WebappClassLoader clearReferencesJdbc
+Grave: La aplicación web [/inspector-0.1.0] registró el conductor JDBC [org.hsqldb.jdbc.JDBCDriver] pero falló al anular el registro mientras la aplicación web estaba parada. Para prevenir un fallo de memoria, se ha anulado el registro del conductor JDBC por la fuerza.
+nov 06, 2014 12:49:39 AM org.apache.coyote.AbstractProtocol stop
+Información: Stopping ProtocolHandler ["http-bio-8080"]
+nov 06, 2014 12:49:39 AM org.apache.coyote.AbstractProtocol stop
+Información: Stopping ProtocolHandler ["ajp-bio-8009"]
+nov 06, 2014 12:49:39 AM org.apache.coyote.AbstractProtocol destroy
+Información: Destroying ProtocolHandler ["http-bio-8080"]
+nov 06, 2014 12:49:39 AM org.apache.coyote.AbstractProtocol destroy
+Información: Destroying ProtocolHandler ["ajp-bio-8009"]
