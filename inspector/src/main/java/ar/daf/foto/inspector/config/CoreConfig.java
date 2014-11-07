@@ -28,6 +28,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
@@ -59,12 +61,49 @@ public class CoreConfig {
 	@Autowired
 	public void setEnviroment(Environment env) {
 		this.env = env;
-		String homePath = System.getProperty("user.home");
-		String dirConfig = env.getProperty("inspector.dirConfig");
-		File file = new File(homePath+File.separator+dirConfig);
-		if (!file.exists()) {
-			file.mkdir();
-		}
+		/*
+		 * Andre: Aca se determina en la variable homePath cual es el path donde se va a buscar 
+		 * la carpeta oculta con los archivos de configuracion de la aplicacion (creandola si no existe).
+		 * De la forma que esta echo busca el home del usuario que ejecute la aplicacion, mediante 
+		 * System.getProperty("user.home").
+		 * 
+		 * Por lo que contaste en tu caso efectivament el tomcat que te configuraron seguro se levanta con
+		 * un usuario ficticio (asumo que tomcat) que no tiene permiso para hacer macanas en el sistema, 
+		 * y dado que no se espera que algun usuario lo use para loguearse, seguro el home apunta a 
+		 *  /dev/null y por eso no te deja crear carpetas ni archivos dentro de el.
+		 *  
+		 * Tiene sentido crear esa carpeta de configuracion si es una aplicacion que la ejecuta un usuario, 
+		 * que es como la habia pensado yo inicialmente. Pero en tu caso, como sera una aplicacion web
+		 * el archivo de configuracion 'inspectorConfig' yo lo ubicaria dentro de la carpeta de resources de 
+		 * la aplicacion (a la misma altura donde esta el arhivo application.propertes).
+		 * Y en ese caso las lineas:
+		 * 
+		 *   String homePath = System.getProperty("user.home");
+		 *   String dirConfig = env.getProperty("inspector.dirConfig");
+		 *   File file = new File(homePath+File.separator+dirConfig);
+		 *   if (!file.exists()) {
+		 *   	file.mkdir();
+		 *   }
+		 *   
+		 * Habria que reemplazarla por:
+		 *  
+		 *   ClassPathResource fileConfigResource = new ClassPathResource("classpath://"+env.getProperty("inspector.fileConfigName"));
+		 *   String homePath = fileConfigResource.getFile().getCanonicalPath(); 
+         *
+		 * Fijate que en este lugar se busca el path UNICAMENTE para crear la carpeta si no existe.
+		 * Si la ubicas dentro de resource, eso no tendria sentido asi que no hay que hacer nada solo comentar codigo.
+		 * 
+		 * Donde si se usa busca y carga el archivo es en la clase DirectoryScannerImpl.java
+		 * Revisa el comentario que te dejo en esa clase.
+		 * 
+		 * Comento a continuacion las lineas que hay que sacar.
+		 */
+//		String homePath = System.getProperty("user.home");
+//		String dirConfig = env.getProperty("inspector.dirConfig");
+//		File file = new File(homePath+File.separator+dirConfig);
+//		if (!file.exists()) {
+//			file.mkdir();
+//		}
 		LoggerContext loggerContext = (LoggerContext)LoggerFactory.getILoggerFactory();
 		
 		Logger rootLogger = loggerContext.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME);
@@ -73,16 +112,28 @@ public class CoreConfig {
 		
 		TimeBasedRollingPolicy<?> rolling = ((TimeBasedRollingPolicy<?>)appenderFile.getRollingPolicy());
 		rolling.stop();
-		
-		String logFileName = appenderFile.getFile();
-		String logFileNamePattern = rolling.getFileNamePattern();
-		Integer maxHistory = env.getProperty("inspector.logFiles.maxHistory", Integer.class);
-		appenderFile.setFile(file.toString()+File.separator+logFileName);
-		rolling.setFileNamePattern(file.toString()+File.separator+logFileNamePattern);
-		rolling.setMaxHistory(maxHistory.intValue());
-		
-		rolling.start();
-		appenderFile.start();
+
+		/*
+		 * El codigo que sigue modifica la configuracion del logguer para que genere el archivo de log
+		 * externo dentro de la carpeta de configuracion de la aplicacion.
+		 * Al no existir dicha carpeta ahora, estando el archivo en resources, NO ES COVNENIENTE
+		 * que el arhivo de logs lo genere en resources.
+		 * Sino mas bien deberia ir (en caso de querer generar un archivo de log propio para la aplicacion)
+		 * en algun path PREDEFINIDO DONDE DEL TOMCAT TENGA PERMISO DE ESCRITURA. Por ejemplo en:
+		 *   /var/log/inspector.log
+		 * Pero ese PATH lo tenes que pedir a quien administra el servidor. 
+		 * Y para setearlo mejor seria ponerlo directamente en el arhivo logback.xml
+		 * Por lo que todo lo que sigue habria que sacarlo. Yo lo comento.
+		 */
+//		String logFileName = appenderFile.getFile();
+//		String logFileNamePattern = rolling.getFileNamePattern();
+//		Integer maxHistory = env.getProperty("inspector.logFiles.maxHistory", Integer.class);
+//		appenderFile.setFile(file.toString()+File.separator+logFileName);
+//		rolling.setFileNamePattern(file.toString()+File.separator+logFileNamePattern);
+//		rolling.setMaxHistory(maxHistory.intValue());
+//		
+//		rolling.start();
+//		appenderFile.start();
 	}
 	
 	@Bean

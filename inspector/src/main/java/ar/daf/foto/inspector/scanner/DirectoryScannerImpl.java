@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
 import ar.daf.foto.inspector.file.AlbumFile;
@@ -40,9 +41,9 @@ public class DirectoryScannerImpl implements DirectoryScanner {
 	
 	private final Logger log = LoggerFactory.getLogger(getClass()); 
 	
-	private String homePath = null;
-	@Value("${inspector.dirConfig}")
-	private String dirConfig;
+//	private String homePath = null;
+//	@Value("${inspector.dirConfig}")
+//	private String dirConfig;
 	@Value("${inspector.fileConfigName}")
 	private String fileConfig;
 	
@@ -55,9 +56,17 @@ public class DirectoryScannerImpl implements DirectoryScanner {
 	
 	@PostConstruct
 	public void onPostStringConfigure() {
-		homePath = System.getProperty("user.home");
-		log.info("HOME_DIR='"+homePath+"'");
-		log.info("CONFIG_DIR='"+dirConfig+"'");
+		/*
+		 * Andre: Aca es donde se busca y carga el archivo.
+		 * Nuevamente como te decia en CoreConfig.java, crea una version del archivo XX en reources
+		 * y cambia aca para que lo busque y cargue de ahi.
+		 * 
+		 * Yo ya te deje una version por defecto del arhivo en reources y modifico el codigo para que busque 
+		 * ese archivo.
+		 */
+//		homePath = System.getProperty("user.home");
+//		log.info("HOME_DIR='"+homePath+"'");
+//		log.info("CONFIG_DIR='"+dirConfig+"'");
 		log.info("CONFIG_FILE='"+fileConfig+"'");
 		boolean configFileOk = existsConfigFile();
 		boolean loadOk = false;
@@ -109,7 +118,18 @@ public class DirectoryScannerImpl implements DirectoryScanner {
 	}
 	
 	protected String getFullPathFileConfig() {
-		return this.homePath+File.separator+this.dirConfig+File.separator+this.fileConfig;
+		/*
+		 * Andre: Aca cambio para buscar y cargar el archivo desde el path de los recursos (el classpath)
+		 */
+//		return this.homePath+File.separator+this.dirConfig+File.separator+this.fileConfig;
+		ClassPathResource fileConfigResource = new ClassPathResource("classpath://"+this.fileConfig);
+		String homePath = null;
+		try {
+			homePath = fileConfigResource.getFile().getCanonicalPath();
+		} catch (IOException e) {
+			log.error(e.getMessage(),  e);
+		} 
+		 return homePath;
 	}
 	
 	public boolean existsConfigFile() {
@@ -172,9 +192,9 @@ public class DirectoryScannerImpl implements DirectoryScanner {
 	
 	public boolean saveConfig() {
 		boolean result = false;
-		if (homePath != null) {
+//		if (homePath != null) {
 			try {
-				createDirIfNotExists(this.homePath+File.separator+this.dirConfig);
+//				createDirIfNotExists(this.homePath+File.separator+this.dirConfig);
 				File archivoAlbum = new File(getFullPathFileConfig());
 				String json = JsonConverter.buildJson(config);
 				if (json != null && !json.isEmpty()) {
@@ -193,7 +213,7 @@ public class DirectoryScannerImpl implements DirectoryScanner {
 			} catch (IOException e) {
 				log.error(e.getMessage());
 			}
-		}
+//		}
 		return result;
 	}
 	

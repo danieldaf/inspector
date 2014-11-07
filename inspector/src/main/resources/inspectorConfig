@@ -1,0 +1,9 @@
+{
+  "albumVersionMayor" : 0,
+  "albumVersionMenor" : 1,
+  "albumVersionRevision" : 0,
+  "dbTextFileName" : ".infoAlbum.json.txt",
+  "dbFileEncoding" : "utf8",
+  "extensiones" : [ "JPEG", "JPG", "PNG", "GIF", "BMP" ],
+  "paths" : [ ]
+}
