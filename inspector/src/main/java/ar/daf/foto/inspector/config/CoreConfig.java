@@ -104,14 +104,14 @@ public class CoreConfig {
 //		if (!file.exists()) {
 //			file.mkdir();
 //		}
-		LoggerContext loggerContext = (LoggerContext)LoggerFactory.getILoggerFactory();
+//		LoggerContext loggerContext = (LoggerContext)LoggerFactory.getILoggerFactory();
 		
-		Logger rootLogger = loggerContext.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME);
-		RollingFileAppender<ILoggingEvent> appenderFile = (RollingFileAppender<ILoggingEvent>)rootLogger.getAppender("file");
-		appenderFile.stop();
+//		Logger rootLogger = loggerContext.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME);
+//		RollingFileAppender<ILoggingEvent> appenderFile = (RollingFileAppender<ILoggingEvent>)rootLogger.getAppender("file");
+//		appenderFile.stop();
 		
-		TimeBasedRollingPolicy<?> rolling = ((TimeBasedRollingPolicy<?>)appenderFile.getRollingPolicy());
-		rolling.stop();
+//		TimeBasedRollingPolicy<?> rolling = ((TimeBasedRollingPolicy<?>)appenderFile.getRollingPolicy());
+//		rolling.stop();
 
 		/*
 		 * El codigo que sigue modifica la configuracion del logguer para que genere el archivo de log

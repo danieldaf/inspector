@@ -122,7 +122,7 @@ public class DirectoryScannerImpl implements DirectoryScanner {
 		 * Andre: Aca cambio para buscar y cargar el archivo desde el path de los recursos (el classpath)
 		 */
 //		return this.homePath+File.separator+this.dirConfig+File.separator+this.fileConfig;
-		ClassPathResource fileConfigResource = new ClassPathResource("classpath://"+this.fileConfig);
+		ClassPathResource fileConfigResource = new ClassPathResource(this.fileConfig);
 		String homePath = null;
 		try {
 			homePath = fileConfigResource.getFile().getCanonicalPath();
