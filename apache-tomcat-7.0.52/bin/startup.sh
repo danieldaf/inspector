@@ -58,4 +58,5 @@ else
 fi
 
 #exec "$PRGDIR"/"$EXECUTABLE" start "$@"
-exec "$PRGDIR"/"$EXECUTABLE" run "$@"
+#exec "$PRGDIR"/"$EXECUTABLE" run "$@"
+exec "$PRGDIR"/"$EXECUTABLE" jpda run "$@"
