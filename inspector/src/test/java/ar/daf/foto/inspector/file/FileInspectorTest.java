@@ -18,6 +18,7 @@ import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
+import ar.daf.foto.inspector.file.fs.FileInspectorFS;
 import ar.daf.foto.utilidades.JsonConverter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -31,7 +32,7 @@ public class FileInspectorTest {
 	File fotoNavidad001, fotoNavidad002, fotoNavidad003, fotoNavidad004;
 	File fotoVacacion98_01, fotoVacacion98_02, fotoVacacion98_03;
 	File fotoVacacion10_01, fotoVacacion10_02, fotoVacacion10_03;
-	FileInspector inspector;
+	FileInspectorFS inspector;
 	
 	@BeforeTest
 	public void crearArchivosTemporales() throws IOException {
@@ -78,7 +79,7 @@ public class FileInspectorTest {
 		String dbTextFileName = ".infoAlbum.json.txt";
 		String dbFileEncoding = "utf8";
 		String extensiones[] = {"JPEG", "JPG", "PNG", "GIF", "BMP"};
-		inspector = new FileInspector(pathBase.toString(), dbTextFileName, dbFileEncoding, Arrays.asList(extensiones));
+		inspector = new FileInspectorFS(pathBase.toString(), dbTextFileName, dbFileEncoding, Arrays.asList(extensiones));
 	}
 
 	@AfterTest

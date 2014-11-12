@@ -1,4 +1,4 @@
-package ar.daf.foto.inspector.file;
+package ar.daf.foto.inspector.file.fs;
 
 import java.util.Comparator;
 

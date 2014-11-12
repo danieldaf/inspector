@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.testng.eclipse.launchconfig">
+<listAttribute key="org.eclipse.debug.ui.favoriteGroups">
+<listEntry value="org.eclipse.debug.ui.launchGroup.debug"/>
+<listEntry value="org.eclipse.debug.ui.launchGroup.run"/>
+</listAttribute>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="org.testng.remote.RemoteTestNG"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="inspector"/>
+<mapAttribute key="org.testng.eclipse.ALL_CLASS_METHODS">
+<mapEntry key="ar.daf.foto.inspector.Main" value=""/>
+<mapEntry key="ar.daf.foto.inspector.file.AlbumFile" value=""/>
+<mapEntry key="ar.daf.foto.inspector.file.AlbumInfoFile" value=""/>
+<mapEntry key="ar.daf.foto.inspector.file.FileDataBaseTextFilter" value=""/>
+<mapEntry key="ar.daf.foto.inspector.file.FileImageComparator" value=""/>
+<mapEntry key="ar.daf.foto.inspector.file.FileInspector" value=""/>
+<mapEntry key="ar.daf.foto.inspector.file.FileInspectorTest" value=""/>
+<mapEntry key="ar.daf.foto.inspector.file.ImagenFile" value=""/>
+<mapEntry key="ar.daf.foto.inspector.file.OnlyDirectoryFilter" value=""/>
+<mapEntry key="ar.daf.foto.inspector.file.OnlyFileImagesFilter" value=""/>
+<mapEntry key="ar.daf.foto.inspector.file.UbicacionFile" value=""/>
+<mapEntry key="ar.daf.foto.inspector.model.Album" value=""/>
+<mapEntry key="ar.daf.foto.inspector.model.AlbumDao" value=""/>
+<mapEntry key="ar.daf.foto.inspector.model.AlbumDaoImpl" value=""/>
+<mapEntry key="ar.daf.foto.inspector.model.AlbumDaoTest" value=""/>
+<mapEntry key="ar.daf.foto.inspector.model.AlbumInfo" value=""/>
+<mapEntry key="ar.daf.foto.inspector.model.DBMSTest" value=""/>
+<mapEntry key="ar.daf.foto.inspector.model.Imagen" value=""/>
+<mapEntry key="ar.daf.foto.inspector.model.Ubicacion" value=""/>
+<mapEntry key="ar.daf.foto.inspector.rest.AlbumDto" value=""/>
+<mapEntry key="ar.daf.foto.inspector.rest.AlbumRestCtrl" value=""/>
+<mapEntry key="ar.daf.foto.inspector.rest.ImagenAlbumDto" value=""/>
+<mapEntry key="ar.daf.foto.inspector.rest.UbicacionDto" value=""/>
+<mapEntry key="ar.daf.foto.utilidades.HashUtils" value=""/>
+<mapEntry key="ar.daf.foto.utilidades.json.AlbumTest" value=""/>
+<mapEntry key="ar.daf.foto.utilidades.json.ImagenTest" value=""/>
+<mapEntry key="ar.daf.foto.utilidades.json.JsonClass" value=""/>
+<mapEntry key="ar.daf.foto.utilidades.json.JsonConverter" value=""/>
+<mapEntry key="ar.daf.foto.utilidades.json.JsonConverterTest" value=""/>
+<mapEntry key="ar.daf.foto.utilidades.json.JsonDateProperty" value=""/>
+<mapEntry key="ar.daf.foto.utilidades.json.JsonProperty" value=""/>
+<mapEntry key="ar.daf.foto.utilidades.json.UbicacionTest" value=""/>
+</mapAttribute>
+<listAttribute key="org.testng.eclipse.CLASS_TEST_LIST">
+<listEntry value="ar.daf.foto.inspector.rest.UbicacionDto"/>
+<listEntry value="ar.daf.foto.utilidades.json.JsonConverterTest"/>
+<listEntry value="ar.daf.foto.inspector.model.DBMSTest"/>
+<listEntry value="ar.daf.foto.inspector.model.Album"/>
+<listEntry value="ar.daf.foto.inspector.file.FileImageComparator"/>
+<listEntry value="ar.daf.foto.inspector.model.AlbumDaoImpl"/>
+<listEntry value="ar.daf.foto.inspector.rest.AlbumRestCtrl"/>
+<listEntry value="ar.daf.foto.inspector.model.AlbumDaoTest"/>
+<listEntry value="ar.daf.foto.utilidades.json.JsonConverter"/>
+<listEntry value="ar.daf.foto.inspector.rest.AlbumDto"/>
+<listEntry value="ar.daf.foto.inspector.file.OnlyDirectoryFilter"/>
+<listEntry value="ar.daf.foto.inspector.model.Imagen"/>
+<listEntry value="ar.daf.foto.inspector.file.AlbumInfoFile"/>
+<listEntry value="ar.daf.foto.inspector.model.AlbumInfo"/>
+<listEntry value="ar.daf.foto.utilidades.json.JsonClass"/>
+<listEntry value="ar.daf.foto.utilidades.json.JsonDateProperty"/>
+<listEntry value="ar.daf.foto.inspector.file.FileInspectorTest"/>
+<listEntry value="ar.daf.foto.inspector.file.FileInspector"/>
+<listEntry value="ar.daf.foto.inspector.model.AlbumDao"/>
+<listEntry value="ar.daf.foto.utilidades.json.ImagenTest"/>
+<listEntry value="ar.daf.foto.inspector.rest.ImagenAlbumDto"/>
+<listEntry value="ar.daf.foto.inspector.file.AlbumFile"/>
+<listEntry value="ar.daf.foto.inspector.file.FileDataBaseTextFilter"/>
+<listEntry value="ar.daf.foto.utilidades.json.JsonProperty"/>
+<listEntry value="ar.daf.foto.inspector.file.ImagenFile"/>
+<listEntry value="ar.daf.foto.inspector.Main"/>
+<listEntry value="ar.daf.foto.utilidades.HashUtils"/>
+<listEntry value="ar.daf.foto.inspector.file.UbicacionFile"/>
+<listEntry value="ar.daf.foto.utilidades.json.AlbumTest"/>
+<listEntry value="ar.daf.foto.inspector.model.Ubicacion"/>
+<listEntry value="ar.daf.foto.inspector.file.OnlyFileImagesFilter"/>
+<listEntry value="ar.daf.foto.utilidades.json.UbicacionTest"/>
+</listAttribute>
+<listAttribute key="org.testng.eclipse.GROUP_LIST"/>
+<listAttribute key="org.testng.eclipse.GROUP_LIST_CLASS"/>
+<stringAttribute key="org.testng.eclipse.LOG_LEVEL" value="2"/>
+<listAttribute key="org.testng.eclipse.METHOD_TEST_LIST"/>
+<listAttribute key="org.testng.eclipse.PACKAGE_TEST_LIST"/>
+<mapAttribute key="org.testng.eclipse.PARAMETERS"/>
+<stringAttribute key="org.testng.eclipse.PRE_DEFINED_LISTENERS" value=""/>
+<intAttribute key="org.testng.eclipse.TYPE" value="1"/>
+</launchConfiguration>

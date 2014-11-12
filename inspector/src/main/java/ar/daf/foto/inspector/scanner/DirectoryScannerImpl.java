@@ -28,7 +28,9 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
 import ar.daf.foto.inspector.file.AlbumFile;
-import ar.daf.foto.inspector.file.FileInspector;
+import ar.daf.foto.inspector.file.AlbumInspector;
+import ar.daf.foto.inspector.file.AlbumInspectorBuilder;
+//import ar.daf.foto.inspector.file.FileInspector;
 import ar.daf.foto.inspector.file.ImagenFile;
 import ar.daf.foto.inspector.model.Album;
 import ar.daf.foto.inspector.model.AlbumDao;
@@ -52,7 +54,7 @@ public class DirectoryScannerImpl implements DirectoryScanner {
 	@Autowired
 	private AlbumDao albumDao;
 	
-	protected List<FileInspector> inspectores = new ArrayList<FileInspector>();
+	protected List<AlbumInspector> inspectores = new ArrayList<AlbumInspector>();
 	
 	@PostConstruct
 	public void onPostStringConfigure() {
@@ -219,8 +221,8 @@ public class DirectoryScannerImpl implements DirectoryScanner {
 	
 	public void updateInspectors() {
 		log.info("Actualizando los inspectores de directorios.");
-		List<FileInspector> newInspectores= new ArrayList<FileInspector>();
-		List<FileInspector> prevInspectores = new ArrayList<FileInspector>();
+		List<AlbumInspector> newInspectores= new ArrayList<AlbumInspector>();
+		List<AlbumInspector> prevInspectores = new ArrayList<AlbumInspector>();
 		synchronized (inspectores) {
 			prevInspectores.addAll(inspectores);
 		}
@@ -228,18 +230,18 @@ public class DirectoryScannerImpl implements DirectoryScanner {
 			for (String path : config.getPaths()) {
 				File pathDir = new File(path);
 				if (!pathDir.exists()) {
-					log.warn("Omiitendo la inspeccion del directorio '"+path+"' porque no existe.");
+					log.warn("Omitiendo la inspeccion del directorio '"+path+"' porque no existe.");
 				} else if (!pathDir.isDirectory()) {
-					log.warn("Omiitendo la inspeccion del directorio '"+path+"' porque no es un directorio.");
+					log.warn("Omitiendo la inspeccion del directorio '"+path+"' porque no es un directorio.");
 				} else if (pathDir.getParent() == null) {
-					log.warn("Omiitendo la inspeccion del directorio '"+path+"' poque es un directorio raiz. Solo se puede configurar subdirectorios como carpetas de albumes.");
+					log.warn("Omitiendo la inspeccion del directorio '"+path+"' poque es un directorio raiz. Solo se puede configurar subdirectorios como carpetas de albumes.");
 				} else {
 					try {
 						path = pathDir.getCanonicalPath();
 					} catch (IOException e) {
 						log.warn("No se pudo determianr el path unico para '"+path+"':"+ e.getMessage());
 					}
-					FileInspector inspector = new FileInspector(path, config.getDbTextFileName(), config.getDbFileEncoding(), config.getExtensiones());
+					AlbumInspector inspector = AlbumInspectorBuilder.buildAlbumInspector(path, config);
 					if (prevInspectores.contains(inspector)) {
 						inspector = prevInspectores.get(prevInspectores.indexOf(inspector));
 						log.debug("Reusando el inspector para el directorio: '"+path+"'");
@@ -259,11 +261,11 @@ public class DirectoryScannerImpl implements DirectoryScanner {
 	
 	public void scan() {
 		log.info("Actualizando todos los albumes.");
-		List<FileInspector> tmpfi = new ArrayList<FileInspector>();
+		List<AlbumInspector> tmpfi = new ArrayList<AlbumInspector>();
 		synchronized (inspectores) {
 			tmpfi.addAll(inspectores);
 		}
-		for (FileInspector inspector : tmpfi) {
+		for (AlbumInspector inspector : tmpfi) {
 			List<AlbumFile> albumesF = inspector.inspeccionar();
 			mergeAlbumes(albumesF);
 			inspector.actualizarIds(albumesF);

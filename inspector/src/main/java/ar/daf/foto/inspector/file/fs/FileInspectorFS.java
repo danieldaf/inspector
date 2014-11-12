@@ -1,4 +1,4 @@
-package ar.daf.foto.inspector.file;
+package ar.daf.foto.inspector.file.fs;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -24,6 +24,11 @@ import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ar.daf.foto.inspector.file.AlbumFile;
+import ar.daf.foto.inspector.file.AlbumInfoFile;
+import ar.daf.foto.inspector.file.AlbumInspector;
+import ar.daf.foto.inspector.file.AlbumInspectorImpl;
+import ar.daf.foto.inspector.file.ImagenFile;
 import ar.daf.foto.utilidades.HashUtils;
 import ar.daf.foto.utilidades.JsonConverter;
 
@@ -34,10 +39,15 @@ import com.fasterxml.jackson.core.JsonProcessingException;
  * Armando los albumes correspondientes.
  * Este inspector se encarga de verificar si un album precisa ser recargado o no.
  * 
+ * TODO IMPORTANTE: Se modifico como subclase de AlbumInspectoImpl
+ * No obstante esta clase sigue definiendo todo el comportamiento por si sola 
+ * para que funcione ok.
+ * Hay que repartir las responsabilidades entre ella y su padre. 
+ * 
  * @author daniel
  *
  */
-public class FileInspector {
+public class FileInspectorFS extends AlbumInspectorImpl implements AlbumInspector {
 	
 	private final Logger log = LoggerFactory.getLogger(getClass());
 	
@@ -64,8 +74,9 @@ public class FileInspector {
 		Map<String, Long> imgsId = new HashMap<String, Long>();
 	}
 	
-	public FileInspector(String pathBase, String dbTextFileName, String dbFileEncoding, List<String> extensiones) {
-		this.pathBase = pathBase;
+	public FileInspectorFS(String pathBase, String dbTextFileName, String dbFileEncoding, List<String> extensiones) {
+//		this.pathBase = pathBase;
+		super(pathBase);
 		this.dbTextFileName = dbTextFileName;
 		this.dbFileEncoding = dbFileEncoding;
 		if (extensiones != null)
@@ -614,7 +625,7 @@ public class FileInspector {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		FileInspector other = (FileInspector) obj;
+		FileInspectorFS other = (FileInspectorFS) obj;
 		if (albumVersionMayor != other.albumVersionMayor)
 			return false;
 		if (albumVersionMenor != other.albumVersionMenor)
