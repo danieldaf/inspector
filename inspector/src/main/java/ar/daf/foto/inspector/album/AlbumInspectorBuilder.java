@@ -1,7 +1,7 @@
-package ar.daf.foto.inspector.file;
+package ar.daf.foto.inspector.album;
 
-import ar.daf.foto.inspector.file.db.FileInspectorDB;
-import ar.daf.foto.inspector.file.fs.FileInspectorFS;
+import ar.daf.foto.inspector.album.db.FileInspectorDB;
+import ar.daf.foto.inspector.album.fs.FileInspectorFS;
 import ar.daf.foto.inspector.scanner.ServiceConfig;
 
 /**
@@ -11,8 +11,8 @@ import ar.daf.foto.inspector.scanner.ServiceConfig;
  */
 public class AlbumInspectorBuilder {
 	
-	private static String FILE_PREFIX = "file://";
-	private static String DB_PREFIX = "jdbc://";
+	public final static String FILE_PREFIX = "file://";
+	public final static String DB_PREFIX = "jdbc://";
 
 	public static AlbumInspector buildAlbumInspector(String pathBase, ServiceConfig config) {
 		AlbumInspector result = null;

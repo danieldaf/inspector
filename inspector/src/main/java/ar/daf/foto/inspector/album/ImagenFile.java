@@ -1,4 +1,4 @@
-package ar.daf.foto.inspector.file;
+package ar.daf.foto.inspector.album;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 

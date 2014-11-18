@@ -27,11 +27,11 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
-import ar.daf.foto.inspector.file.AlbumFile;
-import ar.daf.foto.inspector.file.AlbumInspector;
-import ar.daf.foto.inspector.file.AlbumInspectorBuilder;
+import ar.daf.foto.inspector.album.AlbumFile;
+import ar.daf.foto.inspector.album.AlbumInspector;
+import ar.daf.foto.inspector.album.AlbumInspectorBuilder;
+import ar.daf.foto.inspector.album.ImagenFile;
 //import ar.daf.foto.inspector.file.FileInspector;
-import ar.daf.foto.inspector.file.ImagenFile;
 import ar.daf.foto.inspector.model.Album;
 import ar.daf.foto.inspector.model.AlbumDao;
 import ar.daf.foto.inspector.model.Imagen;

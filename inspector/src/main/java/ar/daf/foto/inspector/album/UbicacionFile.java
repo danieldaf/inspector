@@ -1,4 +1,4 @@
-package ar.daf.foto.inspector.file;
+package ar.daf.foto.inspector.album;
 
 import ar.daf.foto.inspector.model.Ubicacion;
 

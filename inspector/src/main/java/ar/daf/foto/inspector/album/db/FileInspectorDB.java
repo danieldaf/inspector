@@ -1,13 +1,17 @@
-package ar.daf.foto.inspector.file.db;
+package ar.daf.foto.inspector.album.db;
 
 import java.io.File;
+import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import ar.daf.foto.inspector.file.AlbumFile;
-import ar.daf.foto.inspector.file.AlbumInspector;
-import ar.daf.foto.inspector.file.AlbumInspectorImpl;
+import ar.daf.foto.inspector.album.AlbumFile;
+import ar.daf.foto.inspector.album.AlbumInspector;
+import ar.daf.foto.inspector.album.AlbumInspectorImpl;
+import ar.daf.foto.inspector.album.dtoIO.AlbumIO;
+import ar.daf.foto.inspector.album.dtoIO.DirectorioIO;
 
 /**
  * TODO
@@ -25,22 +29,22 @@ public class FileInspectorDB extends AlbumInspectorImpl implements
 	}
 
 	@Override
-	protected String armarPathAlbum(File directorio) {
+	protected DirectorioIO buildDirectorioBase() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public AlbumFile actualizarAlbum(AlbumFile album) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	protected AlbumFile construirAlbum(File directorio, File[] archivosImagenes)
+	protected AlbumFile construirAlbum(AlbumIO albumIO)
 			throws NoSuchAlgorithmException, JsonProcessingException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
+	protected void salvarAlbum(AlbumFile album, AlbumIO albumIO)
+			throws IOException {
+		// TODO Auto-generated method stub
+		
+	}
 }

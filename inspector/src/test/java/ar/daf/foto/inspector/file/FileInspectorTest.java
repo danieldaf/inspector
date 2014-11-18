@@ -18,7 +18,8 @@ import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-import ar.daf.foto.inspector.file.fs.FileInspectorFS;
+import ar.daf.foto.inspector.album.AlbumFile;
+import ar.daf.foto.inspector.album.fs.FileInspectorFS;
 import ar.daf.foto.utilidades.JsonConverter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
