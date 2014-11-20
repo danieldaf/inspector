@@ -7,8 +7,8 @@ import java.util.Iterator;
 
 import org.joda.time.DateTime;
 
-import ar.daf.foto.inspector.album.dtoIO.AlbumIO;
-import ar.daf.foto.inspector.album.dtoIO.DirectorioIO;
+import ar.daf.foto.inspector.album.AlbumIO;
+import ar.daf.foto.inspector.album.DirectorioIO;
 import ar.daf.foto.inspector.album.fs.AlbumInspectorFSImpl.DtoFactory;
 
 public class DirectorioFS implements DirectorioIO {

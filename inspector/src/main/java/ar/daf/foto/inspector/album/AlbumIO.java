@@ -1,10 +1,9 @@
-package ar.daf.foto.inspector.album.dtoIO;
+package ar.daf.foto.inspector.album;
 
 import java.io.IOException;
 
 import org.joda.time.DateTime;
 
-import ar.daf.foto.inspector.album.AlbumFile;
 
 /**
  * Esta clase representa un album en su representacion interna dentro del directorio

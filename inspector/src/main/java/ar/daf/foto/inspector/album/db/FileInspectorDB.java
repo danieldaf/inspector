@@ -8,10 +8,10 @@ import java.util.List;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import ar.daf.foto.inspector.album.AlbumFile;
+import ar.daf.foto.inspector.album.AlbumIO;
 import ar.daf.foto.inspector.album.AlbumInspector;
 import ar.daf.foto.inspector.album.AlbumInspectorImpl;
-import ar.daf.foto.inspector.album.dtoIO.AlbumIO;
-import ar.daf.foto.inspector.album.dtoIO.DirectorioIO;
+import ar.daf.foto.inspector.album.DirectorioIO;
 
 /**
  * TODO

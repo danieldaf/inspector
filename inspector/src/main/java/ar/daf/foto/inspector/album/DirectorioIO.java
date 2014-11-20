@@ -1,4 +1,4 @@
-package ar.daf.foto.inspector.album.dtoIO;
+package ar.daf.foto.inspector.album;
 
 import org.joda.time.DateTime;
 

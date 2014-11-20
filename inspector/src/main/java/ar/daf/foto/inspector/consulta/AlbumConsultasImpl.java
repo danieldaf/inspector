@@ -70,6 +70,9 @@ public class AlbumConsultasImpl implements AlbumConsultas {
 	
 	@Override
 	public byte[] obtenerImagen(String hashId, String fileNameImagen) {
+		//FIXME TODO Esto quedo dependiente de la carga de imagenes desde archivos (desde el FileSystem)
+		//Deberia ser abstracto aqui, pero aun no me convence como implementarlo para manterner la abstraccion lograda en la inspeccion de albumes
+		//Una solucion, poco elegante pero paractica, seria decidir aqui en base a 'algo' el tipo de carga a emplear...
 		byte[] result = null;
 		if (hashId != null && fileNameImagen != null) {
 			Imagen imagen = albumDao.recuperarImagen(hashId, fileNameImagen);

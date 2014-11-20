@@ -16,8 +16,8 @@ import java.util.Iterator;
 import org.joda.time.DateTime;
 
 import ar.daf.foto.inspector.album.AlbumFile;
-import ar.daf.foto.inspector.album.dtoIO.AlbumIO;
-import ar.daf.foto.inspector.album.dtoIO.DirectorioIO;
+import ar.daf.foto.inspector.album.AlbumIO;
+import ar.daf.foto.inspector.album.DirectorioIO;
 import ar.daf.foto.utilidades.JsonConverter;
 
 public class AlbumFS implements AlbumIO {
@@ -193,7 +193,6 @@ public class AlbumFS implements AlbumIO {
 	@Override
 	public boolean hasImagenes() {
 		boolean result = false;
-		//cant read dire
 		if (dir != null && dir.isDirectory() && dir.canRead() && dir.canExecute()) {
 			File files[] = dir.listFiles(fileImageFilter);
 			if (files.length > 0)

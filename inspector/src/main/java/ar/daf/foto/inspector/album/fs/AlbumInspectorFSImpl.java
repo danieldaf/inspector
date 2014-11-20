@@ -15,12 +15,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ar.daf.foto.inspector.album.AlbumFile;
+import ar.daf.foto.inspector.album.AlbumIO;
 import ar.daf.foto.inspector.album.AlbumInfoFile;
 import ar.daf.foto.inspector.album.AlbumInspector;
 import ar.daf.foto.inspector.album.AlbumInspectorImpl;
+import ar.daf.foto.inspector.album.DirectorioIO;
 import ar.daf.foto.inspector.album.ImagenFile;
-import ar.daf.foto.inspector.album.dtoIO.AlbumIO;
-import ar.daf.foto.inspector.album.dtoIO.DirectorioIO;
 import ar.daf.foto.utilidades.HashUtils;
 import ar.daf.foto.utilidades.JsonConverter;
 
