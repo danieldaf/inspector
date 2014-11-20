@@ -228,19 +228,19 @@ public class DirectoryScannerImpl implements DirectoryScanner {
 		}
 		if (config.getPaths() != null) {
 			for (String path : config.getPaths()) {
-				File pathDir = new File(path);
-				if (!pathDir.exists()) {
-					log.warn("Omitiendo la inspeccion del directorio '"+path+"' porque no existe.");
-				} else if (!pathDir.isDirectory()) {
-					log.warn("Omitiendo la inspeccion del directorio '"+path+"' porque no es un directorio.");
-				} else if (pathDir.getParent() == null) {
-					log.warn("Omitiendo la inspeccion del directorio '"+path+"' poque es un directorio raiz. Solo se puede configurar subdirectorios como carpetas de albumes.");
-				} else {
-					try {
-						path = pathDir.getCanonicalPath();
-					} catch (IOException e) {
-						log.warn("No se pudo determianr el path unico para '"+path+"':"+ e.getMessage());
-					}
+//				File pathDir = new File(path);
+//				if (!pathDir.exists()) {
+//					log.warn("Omitiendo la inspeccion del directorio '"+path+"' porque no existe.");
+//				} else if (!pathDir.isDirectory()) {
+//					log.warn("Omitiendo la inspeccion del directorio '"+path+"' porque no es un directorio.");
+//				} else if (pathDir.getParent() == null) {
+//					log.warn("Omitiendo la inspeccion del directorio '"+path+"' poque es un directorio raiz. Solo se puede configurar subdirectorios como carpetas de albumes.");
+//				} else {
+//					try {
+//						path = pathDir.getCanonicalPath();
+//					} catch (IOException e) {
+//						log.warn("No se pudo determianr el path unico para '"+path+"':"+ e.getMessage());
+//					}
 					AlbumInspector inspector = AlbumInspectorBuilder.buildAlbumInspector(path, config);
 					if (prevInspectores.contains(inspector)) {
 						inspector = prevInspectores.get(prevInspectores.indexOf(inspector));
@@ -249,7 +249,7 @@ public class DirectoryScannerImpl implements DirectoryScanner {
 						log.debug("Agregado un inspector nuevo para el directorio: '"+path+"'");
 					}
 					newInspectores.add(inspector);
-				}
+//				}
 			}
 		}
 		synchronized (inspectores) {

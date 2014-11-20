@@ -39,7 +39,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
  * @author daniel
  *
  */
-public class FileInspectorFS extends AlbumInspectorImpl implements AlbumInspector {
+public class AlbumInspectorFSImpl extends AlbumInspectorImpl implements AlbumInspector {
 	
 	private final Logger log = LoggerFactory.getLogger(getClass());
 	
@@ -51,7 +51,7 @@ public class FileInspectorFS extends AlbumInspectorImpl implements AlbumInspecto
 	private FileFilter directoryFilter;
 	private FileFilter fileDataBaseTextFilter;
 	
-	public FileInspectorFS(String pathBase, String dbTextFileName, String dbFileEncoding, List<String> extensiones) {
+	public AlbumInspectorFSImpl(String pathBase, String dbTextFileName, String dbFileEncoding, List<String> extensiones) {
 		super(pathBase);
 		this.dbTextFileName = dbTextFileName;
 		this.dbFileEncoding = dbFileEncoding;
@@ -159,7 +159,7 @@ public class FileInspectorFS extends AlbumInspectorImpl implements AlbumInspecto
 
 		DateTime firstDate = null;
 		for (String nombreImagen : albumIO) {
-			File archivoImagen = (File)albumIO.loadImagen(nombreImagen);
+			File archivoImagen = ((AlbumFS)albumIO).loadImagenFile(nombreImagen);
 			
 			ImagenFile imagen = new ImagenFile();
 			imagen.setTitulo(archivoImagen.getName());
@@ -210,10 +210,11 @@ public class FileInspectorFS extends AlbumInspectorImpl implements AlbumInspecto
 	
 	static class DtoFactory {
 		
-		private static FileInspectorFS padre = null;				
+		private static AlbumInspectorFSImpl padre = null;				
 		private static DtoFactory instance = null;
-		private DtoFactory(FileInspectorFS padre) {
+		private DtoFactory(AlbumInspectorFSImpl padre) {
 			DtoFactory.padre = padre;
+			DtoFactory.instance = this;
 		}
 		public static DtoFactory getInstance() {
 			return instance;

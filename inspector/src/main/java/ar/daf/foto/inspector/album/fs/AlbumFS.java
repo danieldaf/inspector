@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.joda.time.DateTime;
@@ -45,8 +46,14 @@ public class AlbumFS implements AlbumIO {
 
 	@Override
 	public Iterator<String> iterator() {
-		// TODO Auto-generated method stub
-		return null;
+		ArrayList<String> result = new ArrayList<String>();
+		if (dir != null && dir.exists() && dir.isDirectory() && dir.canRead() && dir.canExecute()) {
+			File files[] = dir.listFiles(fileImageFilter);
+			for (File file : files) { 
+				result.add(file.getName());
+			}
+		}
+		return result.iterator();
 	}
 
 	@Override
@@ -137,12 +144,32 @@ public class AlbumFS implements AlbumIO {
 	}
 	
 	@Override
-	public AlbumFile loadAlbumInfo() {
+	public AlbumFile loadAlbumInfo() throws IOException {
 		AlbumFile result = null;
 		if (dir != null && dir.isDirectory() && dir.canRead() && dir.canExecute()) {
 			File files[] = dir.listFiles(fileDataBaseTextFilter);
 			if (files.length > 0) {
-				//Load JSO File
+				try {
+	//				logDebug(dbTxt.getParentFile(), "Cargando archivo de album");
+					FileInputStream fis = new FileInputStream(files[0]);
+					DataInputStream dis = new DataInputStream(fis);
+					BufferedReader br = new BufferedReader(new InputStreamReader(dis, dbFileEncoding));
+					StringBuffer buffer = new StringBuffer();
+					String strLinea = br.readLine();
+					while (strLinea != null) {
+						buffer.append(strLinea);
+						strLinea = br.readLine();
+					}
+					br.close();
+					result = JsonConverter.buildObject(AlbumFile.class, buffer.toString());
+					result.setPathBase(this.pathBase);
+					result.setPath(armarPathAlbum(files[0].getParentFile()));
+					result.setFileName(files[0].getParentFile().getName());
+				} catch (FileNotFoundException e) {
+//					logError(files[0].getParentFile(), e.getMessage());
+				} catch (UnsupportedEncodingException e) {
+//					logError(files[0].getParentFile(), e.getMessage());
+				}
 			}
 		}
 		return result;
@@ -166,6 +193,7 @@ public class AlbumFS implements AlbumIO {
 	@Override
 	public boolean hasImagenes() {
 		boolean result = false;
+		//cant read dire
 		if (dir != null && dir.isDirectory() && dir.canRead() && dir.canExecute()) {
 			File files[] = dir.listFiles(fileImageFilter);
 			if (files.length > 0)
@@ -188,6 +216,11 @@ public class AlbumFS implements AlbumIO {
 	public Object loadImagen(String nombre) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public File loadImagenFile(String nombre) {
+		File result = new File(dir.getAbsolutePath()+File.separator+nombre);
+		return result;
 	}
 
 }

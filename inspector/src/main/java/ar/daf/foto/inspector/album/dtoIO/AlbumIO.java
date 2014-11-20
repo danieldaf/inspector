@@ -1,5 +1,7 @@
 package ar.daf.foto.inspector.album.dtoIO;
 
+import java.io.IOException;
+
 import org.joda.time.DateTime;
 
 import ar.daf.foto.inspector.album.AlbumFile;
@@ -42,7 +44,7 @@ public interface AlbumIO extends Iterable<String> {
 	 * Null en caso contrario.
 	 * @return
 	 */
-	AlbumFile loadAlbumInfo();
+	AlbumFile loadAlbumInfo() throws IOException;
 	/**
 	 * Permite borrar definitivamente la descripcion del album.
 	 * @return
@@ -63,5 +65,5 @@ public interface AlbumIO extends Iterable<String> {
 	 * @param nombre
 	 * @return
 	 */
-	Object loadImagen(String nombre);
+	Object loadImagen(String nombre) throws IOException;
 }

@@ -5,5 +5,5 @@
   "dbTextFileName" : ".infoAlbum.json.txt",
   "dbFileEncoding" : "utf8",
   "extensiones" : [ "JPEG", "JPG", "PNG", "GIF", "BMP" ],
-  "paths" : [ ]
+  "paths" : [ "file:///home/daniel/local/proys/personal/foto/albums" ]
 }

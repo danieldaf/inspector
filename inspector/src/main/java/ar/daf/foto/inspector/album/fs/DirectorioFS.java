@@ -9,7 +9,7 @@ import org.joda.time.DateTime;
 
 import ar.daf.foto.inspector.album.dtoIO.AlbumIO;
 import ar.daf.foto.inspector.album.dtoIO.DirectorioIO;
-import ar.daf.foto.inspector.album.fs.FileInspectorFS.DtoFactory;
+import ar.daf.foto.inspector.album.fs.AlbumInspectorFSImpl.DtoFactory;
 
 public class DirectorioFS implements DirectorioIO {
 	
@@ -26,6 +26,14 @@ public class DirectorioFS implements DirectorioIO {
 	public File getFile() {
 		return dir;
 	}
+	
+	private void addAlbumes(File dir, ArrayList<AlbumIO> lista) {
+		File files[] = dir.listFiles(directoryFilter);
+		for (File file : files) {
+			AlbumIO album = DtoFactory.getInstance().createAlbum(this, file.getAbsolutePath());
+			lista.add(album);
+		}
+	}
 
 	@Override
 	public Iterator<AlbumIO> iterator() {
@@ -33,9 +41,9 @@ public class DirectorioFS implements DirectorioIO {
 		if (dir != null && dir.exists() && dir.isDirectory() && dir.canRead() && dir.canExecute()) {
 			File files[] = dir.listFiles(directoryFilter);
 			for (File file : files) { 
-//				AlbumIO album = new AlbumFS(this, dir.getAbsolutePath(), file.getName(), fileImageFilter, fileDataBaseTextFilter);
-				AlbumIO album = DtoFactory.getInstance().createAlbum(this, file.getName());
+				AlbumIO album = DtoFactory.getInstance().createAlbum(this, file.getAbsolutePath());
 				result.add(album);
+				addAlbumes(file, result);
 			}
 		}
 		return result.iterator();

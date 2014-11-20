@@ -1,7 +1,7 @@
 package ar.daf.foto.inspector.album;
 
 import ar.daf.foto.inspector.album.db.FileInspectorDB;
-import ar.daf.foto.inspector.album.fs.FileInspectorFS;
+import ar.daf.foto.inspector.album.fs.AlbumInspectorFSImpl;
 import ar.daf.foto.inspector.scanner.ServiceConfig;
 
 /**
@@ -27,10 +27,10 @@ public class AlbumInspectorBuilder {
 			if (DB_PREFIX.equals(protocolo)) {
 				result = new FileInspectorDB(pathBase);
 			} if (FILE_PREFIX.equals(protocolo)) {
-				result = new FileInspectorFS(path, config.getDbTextFileName(), config.getDbFileEncoding(), config.getExtensiones());
+				result = new AlbumInspectorFSImpl(path, config.getDbTextFileName(), config.getDbFileEncoding(), config.getExtensiones());
 			} else {
 				//Si no tiene un protocolo identificado 
-				result = new FileInspectorFS(path, config.getDbTextFileName(), config.getDbFileEncoding(), config.getExtensiones());
+				result = new AlbumInspectorFSImpl(path, config.getDbTextFileName(), config.getDbFileEncoding(), config.getExtensiones());
 			}
 		}
 		return result;
